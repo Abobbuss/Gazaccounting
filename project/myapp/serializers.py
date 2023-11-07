@@ -9,11 +9,17 @@ class ItemSerializer(serializers.ModelSerializer):
 class CitySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.City
-        fields = 'name'
+        fields = ('name',)
 
 class PersonSerializer(serializers.ModelSerializer):    
     city = serializers.StringRelatedField()
 
     class Meta:
         model = models.Person
+        fields = '__all__'
+
+class OwnershipSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Ownership
         fields = '__all__'

@@ -18,15 +18,19 @@ urlpatterns = [
         include([
             path('swagger/shema/', shema_view.with_ui('swagger', cache_timeout=0)),
 
-            path('cities/', views.CityListView.as_view(), name='city-list'),
+            path('citie/', views.CityListView.as_view(), name='city-list'),
 
-            path('persons/create/', views.PersonCreateView.as_view(), name='person-create'),
-            path('persons/', views.PersonListView.as_view(), name='person-list'),
-            path('persons/<int:pk>/', views.PersonDetailView.as_view(), name='person-detail'),
+            path('person/create/', views.PersonCreateView.as_view(), name='person-create'),
+            path('person/', views.PersonListView.as_view(), name='person-list'),
+            path('person/<int:pk>/', views.PersonDetailView.as_view(), name='person-detail'),
 
-            path('items/create/', views.ItemCreateView.as_view(), name='item-create'),
-            path('items/', views.ItemListView.as_view(), name='item-list'),
-            path('items/<int:pk>/', views.ItemDetailView.as_view(), name='item-detail'),
+            path('item/create/', views.ItemCreateView.as_view(), name='item-create'),
+            path('item/', views.ItemListView.as_view(), name='item-list'),
+            path('item/<int:pk>/', views.ItemDetailView.as_view(), name='item-detail'),
+
+            path('ownership/', views.OwnershipListView.as_view(), name='ownership-list'),
+            path('ownership/create', views.OwnerShipCreateView.as_view(), name='ownership-list'),
+
 
         ]))
     
