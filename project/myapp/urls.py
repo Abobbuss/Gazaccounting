@@ -18,7 +18,7 @@ urlpatterns = [
         include([
             path('swagger/shema/', shema_view.with_ui('swagger', cache_timeout=0)),
 
-            path('citie/', views.CityListView.as_view(), name='city-list'),
+            path('city/', views.CityListView.as_view(), name='city-list'),
 
             path('person/create/', views.PersonCreateView.as_view(), name='person-create'),
             path('person/', views.PersonListView.as_view(), name='person-list'),
@@ -30,8 +30,7 @@ urlpatterns = [
 
             path('ownership/', views.OwnershipListView.as_view(), name='ownership-list'),
             path('ownership/create', views.OwnerShipCreateView.as_view(), name='ownership-list'),
-
-
+            path('ownership/<int:pk>/', views.OwnerShipDetailView.as_view(), name='ownership-detail')
         ]))
     
 ]

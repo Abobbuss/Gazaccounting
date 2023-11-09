@@ -2,7 +2,7 @@ from rest_framework import generics
 from . import models
 from . import serializers
 from rest_framework.response import Response
-from . import func
+from . import utils
 from io import BytesIO
 
 
@@ -50,15 +50,19 @@ class OwnerShipCreateView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        if func.check_db(serializer):
+        if utils.check_existing_record(serializer):
             return Response({"message": "Эта запись уже существует"})
 
         created_record = serializer.save()
 
-        qr_data = func.generate_qr_code(created_record.id)
+        qr_data = utils.generate_qr_code(created_record.id)
         if qr_data is None:
             return Response({"message": "Не удалось создать qr"})
 
         created_record.qr_code.save(f'qr_code_{created_record.id}.png', BytesIO(qr_data), save=True)
 
         return Response({"message": "Запись создана успешно"})
+    
+class OwnerShipDetailView(generics.RetrieveAPIView):
+    queryset = models.Ownership.objects.all()
+    serializer_class = serializers.OwnershipSerializer
