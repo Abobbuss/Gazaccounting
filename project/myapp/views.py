@@ -4,7 +4,12 @@ from . import serializers
 from rest_framework.response import Response
 from . import utils
 from io import BytesIO
+from django.shortcuts import render
 
+
+#index
+def index(request):
+    return render(request, 'index.html')
 
 # Person
 class PersonCreateView(generics.CreateAPIView):
