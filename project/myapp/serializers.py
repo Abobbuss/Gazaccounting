@@ -12,11 +12,13 @@ class CitySerializer(serializers.ModelSerializer):
         fields = ('name',)
 
 class PersonSerializer(serializers.ModelSerializer):    
-    city = serializers.StringRelatedField()
 
     class Meta:
         model = models.Person
-        fields = '__all__'
+        fields = ['last_name', 'first_name', 'middle_name', 'city']
+
+class PersonSearchSerializer(serializers.Serializer):
+    query = serializers.CharField()
 
 class OwnershipSerializer(serializers.ModelSerializer):
 

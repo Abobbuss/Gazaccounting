@@ -9,7 +9,7 @@ class OwnershipAdmin(admin.ModelAdmin):
 admin.site.register(models.Ownership, OwnershipAdmin)
 
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ['last_name', 'first_name', 'middle_name', 'city', 'phone_number']
+    list_display = ['last_name', 'first_name', 'middle_name', 'city']
     ordering = ['last_name', 'first_name', 'middle_name', 'city']
     search_fields = ['last_name', 'first_name', 'middle_name', 'city__name']
 

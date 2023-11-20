@@ -5,6 +5,9 @@ from rest_framework.response import Response
 from . import utils
 from io import BytesIO
 from django.shortcuts import render
+from django.db.models import Q
+import re
+from rest_framework import status
 
 
 #index
@@ -16,6 +19,16 @@ class PersonCreateView(generics.CreateAPIView):
     queryset = models.Person.objects.all()
     serializer_class = serializers.PersonSerializer
 
+    def create(self, request, *args, **kwargs):
+        try:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 class PersonListView(generics.ListAPIView):
     queryset = models.Person.objects.all()
     serializer_class = serializers.PersonSerializer
@@ -24,6 +37,41 @@ class PersonDetailView(generics.RetrieveAPIView):
     queryset = models.Person.objects.all()
     serializer_class = serializers.PersonSerializer
 
+class PersonSearchView(generics.ListAPIView):
+    serializer_class = serializers.PersonSerializer
+
+    def get_queryset(self):
+        search_query = self.kwargs.get('search_query', '').strip()
+        
+        if not search_query:
+            return models.Person.objects.all()
+
+        search_terms = re.split(r'\s+', search_query)
+
+        q_filter = Q()
+
+        # Фильтр для поиска по Фамилии
+        if search_terms:
+            q_filter |= Q(last_name__icontains=search_terms[0])
+
+        # Фильтр для поиска по Имени
+        if len(search_terms) > 1:
+            q_filter |= Q(first_name__icontains=search_terms[1])
+
+        # Фильтр для поиска по Отчеству
+        if len(search_terms) > 2:
+            q_filter |= Q(middle_name__icontains=' '.join(search_terms[2:]))
+
+        q_filter |= (
+            Q(last_name__icontains=search_query) |
+            Q(first_name__icontains=search_query) |
+            Q(middle_name__icontains=search_query)
+        )
+
+        queryset = models.Person.objects.filter(q_filter)
+
+        return queryset
+    
 # Item
 class ItemCreateView(generics.CreateAPIView):
     queryset = models.Item.objects.all()
