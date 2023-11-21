@@ -19,16 +19,6 @@ class PersonCreateView(generics.CreateAPIView):
     queryset = models.Person.objects.all()
     serializer_class = serializers.PersonSerializer
 
-    def create(self, request, *args, **kwargs):
-        try:
-            serializer = self.get_serializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
-            headers = self.get_success_headers(serializer.data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
 class PersonListView(generics.ListAPIView):
     queryset = models.Person.objects.all()
     serializer_class = serializers.PersonSerializer
@@ -76,6 +66,20 @@ class PersonSearchView(generics.ListAPIView):
 class ItemCreateView(generics.CreateAPIView):
     queryset = models.Item.objects.all()
     serializer_class = serializers.ItemSerializer
+
+    def perform_create(self, serializer):
+        name = self.request.data.get('name')
+        brand = self.request.data.get('brand')
+
+        existing_item = models.Item.objects.filter(name=name, brand=brand).first()
+
+        if existing_item:
+            response_data = {'message': 'Такая вещь уже существует'}
+            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
+        response_data = {'message': 'Успешно добавлено'}
+        return Response(response_data, status=status.HTTP_201_CREATED)
 
 class ItemListView(generics.ListAPIView):
     queryset = models.Item.objects.all()

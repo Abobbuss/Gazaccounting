@@ -1,19 +1,27 @@
 var personSearchAPI = 'http://127.0.0.1:8000/api/person/search/';
 var addPersonAPI = 'http://127.0.0.1:8000/api/person/create/';
-var getCitiesAPI = 'http://127.0.0.1:8000/api/city/'
+var getCitiesAPI = 'http://127.0.0.1:8000/api/city/';
+var addItemAPI = 'http://127.0.0.1:8000/api/item/create/';
 
+function fetchCsrfToken() {
+  var csrfTokenMatch = document.cookie.match(/csrftoken=([^;]+)/);
+
+  if (csrfTokenMatch && csrfTokenMatch[1]) {
+      return csrfTokenMatch[1];
+  } else {
+      console.error('Не удалось найти csrftoken в cookie');
+      return null;
+  }
+}
 
 function loadCities() {
   const citySelect = document.getElementById('citySelect');
 
-  // Очистка текущих опций в списке
   citySelect.innerHTML = '';
 
-  // Запрос к API
   fetch(getCitiesAPI)
     .then(response => response.json())
     .then(data => {
-      // Заполнение выпадающего списка полученными городами
       data.forEach(city => {
         const option = document.createElement('option');
         option.value = city.name;
@@ -26,47 +34,9 @@ function loadCities() {
     });
 }
 
-// Вызов функции при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
   loadCities();
 });
-
-// function addPerson() {
-//   const lastName = document.getElementById('last-name').value;
-//   const firstName = document.getElementById('first-name').value;
-//   const middleName = document.getElementById('middle-name').value;
-//   const selectedCityId = document.getElementById('citySelect').value;
-
-//   const personData = {
-//     last_name: lastName,
-//     first_name: firstName,
-//     middle_name: middleName,
-//     city: selectedCityId
-//   };
-
-//   // Получение CSRF-токена из куки
-//   const csrfToken = document.cookie
-//   .split('; ')
-//   .find(row => row.startsWith('csrftoken='))
-//   .split('=')[1];
-//   console.log(csrfToken);
-
-//   fetch(addPersonAPI, {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//       'X-CSRFToken': csrfToken  // Добавление CSRF-токена в заголовки
-//     },
-//     body: JSON.stringify(personData),
-//   })
-//   .then(response => response.json())
-//   .then(data => {
-//     console.log('Success:', data);
-//   })
-//   .catch((error) => {
-//     console.error('Error:', error);
-//   });
-// }
 
 function searchNames(query) {
   if (!query.trim()) {
@@ -74,7 +44,6 @@ function searchNames(query) {
     return;
   }
 
-  // AJAX-запрос к новому эндпоинту поиска
   var xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function() {
     if (xhr.readyState === 4 && xhr.status === 200) {
@@ -82,7 +51,6 @@ function searchNames(query) {
     }
   };
 
-  // encodeURIComponent для корректной обработки спецсимволов
   xhr.open('GET', personSearchAPI + encodeURIComponent(query), true);
   xhr.send();
 }
@@ -98,3 +66,49 @@ function displayResults(results) {
   });
 }
 
+function addItem() {
+  var itemName = document.getElementById('itemName');
+  var itemBrand = document.getElementById('itemBrand');
+
+  if (!itemName || !itemBrand) {
+      console.error('Не удалось найти один из элементов');
+      return;
+  }
+
+  var csrfTokenMatch = fetchCsrfToken();
+
+  if(!csrfTokenMatch){
+    return;
+  }
+
+  var itemNameValue = itemName.value;
+  var itemBrandValue = itemBrand.value;
+
+  var data = {
+      "name": itemNameValue,
+      "brand": itemBrandValue
+  };
+
+  fetch(addItemAPI, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfTokenMatch
+      },
+      body: JSON.stringify(data),
+  })
+  .then(response => response.json())
+  .then((data) => data && data.message && showMessage(data.message))
+  .catch((error) => {
+      console.error('Ошибка:', error);
+  });
+}
+
+function showMessage(message) {
+    console.log('showMessage вызвана');
+    // Реализовать вывод сообщения на странице, например, в каком-то элементе с id="message"
+    var messageElement = document.getElementById('message');
+    if (messageElement) {
+        messageElement.innerHTML = message;
+    }
+}

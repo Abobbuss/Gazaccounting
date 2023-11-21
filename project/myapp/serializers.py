@@ -15,7 +15,7 @@ class PersonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Person
-        fields = ['last_name', 'first_name', 'middle_name', 'city']
+        fields = '__all__'
 
 class PersonSearchSerializer(serializers.Serializer):
     query = serializers.CharField()

@@ -1,4 +1,5 @@
 {%load static%}
+{% csrf_token%}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -9,8 +10,8 @@
     <meta charset="utf-8" />
     <meta property="twitter:card" content="summary_large_image" />
 
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/index.css' %}">
-    <script src="{% static 'myapp/js/indexScriptsAPI.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/index.css' %}?version=123">
+    <script src="{% static 'myapp/js/indexScriptsAPI.js' %}?version=126"></script>
   </head>
   <body>
     <div>
@@ -59,9 +60,6 @@
                   id="middle-name"
                 />
                 <select id="citySelect" className="home-select">
-                  <option value="Option 1">Option 1</option>
-                  <option value="Option 2">Option 2</option>
-                  <option value="Option 3">Option 3</option>
                 </select>
               </div>
               <div class="home-card-content">
@@ -80,15 +78,17 @@
                   type="text"
                   placeholder="Название"
                   class="home-textinput3 input"
+                  id="itemName"
                 />
                 <input
                   type="text"
                   placeholder="Марка"
                   class="home-textinput4 input"
+                  id="itemBrand"
                 />
               </div>
               <div class="home-card-content1">
-                <button class="home-choose1 button Anchor">Добавить</button>
+                <button onclick="addItem()" class="home-choose1 button Anchor">Добавить</button>
               </div>
             </div>
             <div class="home-card2">
@@ -108,14 +108,6 @@
                     placeholder="Вещь"
                     class="home-textinput6 input"
                 />
-                <!-- <div class="home-addItemCount">
-                  <span class="home-text-addItemCount">Количество</span>
-                  <input
-                    type="text"
-                    placeholder="Количество"
-                    class="home-textinput7 input"
-                  />
-                </div> -->
                 <input
                   type="text"
                   placeholder="Количество"
@@ -130,54 +122,59 @@
         </div>
       </div>
     </div>
+
+<!-- 
     <script>
-function addPerson() {
-  const lastName = document.getElementById('last-name').value;
-  const firstName = document.getElementById('first-name').value;
-  const middleName = document.getElementById('middle-name').value;
-  const selectedCityId = document.getElementById('citySelect').value;
+      function addPerson() {
+          var lastName = document.getElementById('last-name');
+          var firstName = document.getElementById('first-name');
+          var middleName = document.getElementById('middle-name');
+          var citySelect = document.getElementById('citySelect');
+  
+          if (lastName && firstName && middleName && citySelect) {
+            var csrfTokenMatch = document.cookie.match(/csrftoken=([^;]+)/);
 
-  const personData = {
-    last_name: lastName,
-    first_name: firstName,
-    middle_name: middleName,
-    city: selectedCityId
-  };
-
-  // Получение CSRF-токена из куки
-  const csrfCookie = document.cookie.match(/csrftoken=(.*)/);
-
-  if (csrfCookie) {
-    const csrfToken = csrfCookie[1];
-    console.log(csrfToken);
-    console.log(personData);
-
-    fetch('http://127.0.0.1:8000/api/person/create/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': csrfToken
-      },
-      body: JSON.stringify(personData),  // Правильное преобразование в JSON
-    })
-    .then(response => {
-      if (response.status === 201 || response.status === 204) {
-        console.log('Success: Data Posted Successfully');
-        // Дополнительные действия по успешному завершению, например, перенаправление или обновление интерфейса
-        window.location.reload(); // обновить страницу
-      } else {
-        throw new Error('Network response was not ok');
-      }
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
-  } else {
-    console.error('CSRF token not found in cookies');
-  }
+if (csrfTokenMatch && csrfTokenMatch[1]) {
+    var csrfToken = csrfTokenMatch[1];
+    // Остальной код
+    // ...
+} else {
+    console.error('CSRF token не найден в cookies.');
 }
-
-    </script>
+  
+              var lastNameValue = lastName.value;
+              var firstNameValue = firstName.value;
+              var middleNameValue = middleName.value;
+              var cityId = citySelect.value;
+  
+              var data = {
+                  "last_name": lastNameValue,
+                  "first_name": firstNameValue,
+                  "middle_name": middleNameValue,
+                  "city_id": cityId  // Отправляем ID города
+              };
+  
+              fetch('http://127.0.0.1:8000/api/person/create/', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                      'X-CSRFToken': csrfToken
+                  },
+                  body: JSON.stringify(data),
+              })
+              .then(response => response.json())
+              .then(data => {
+                  console.log('Успешно добавлено:', data);
+                  // Здесь вы можете выполнить дополнительные действия после успешного добавления человека
+              })
+              .catch((error) => {
+                  console.error('Ошибка:', error);
+              });
+          } else {
+              console.error('Не удалось найти один из элементов');
+          }
+      }
+  </script> -->
 
   </body>
 </html>
