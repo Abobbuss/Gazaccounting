@@ -1,0 +1,55 @@
+{%load static%}
+{% csrf_token%}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Portfolio Page</title>
+        <meta property="og:title" content="Portfolio Page" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta property="twitter:card" content="summary_large_image" />
+    
+        <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/record.css' %}?version=121">
+        <script src="{% static 'myapp/js/indexScriptsAPI.js' %}?version=125"></script>
+    </head>
+    <body>
+        <div class="record-container">
+
+        </div>
+        <h1>Общий учет</h1>
+
+        <label for="cities">Выберите город:</label>
+        <select id="cities">
+            <!-- Варианты городов -->
+            <option value="city1">Город 1</option>
+            <option value="city2">Город 2</option>
+            <!-- Добавьте другие города по мере необходимости -->
+        </select>
+
+        <label for="search">Умный поиск:</label>
+        <input type="text" id="search" placeholder="Введите название или марку вещи">
+
+        <div id="items">
+            <!-- Блок с умным поиском -->
+            <p>Название1 (Марка1)</p>
+            <p>Название2 (Марка2)</p>
+            <!-- Добавьте другие вещи по мере необходимости -->
+        </div>
+
+        <table id="data-table">
+            <thead>
+                <tr>
+                    <th>Город</th>
+                    <th>Вещь</th>
+                    <th>Количество</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Данные таблицы будут заполняться динамически с помощью JavaScript -->
+            </tbody>
+        </table>
+
+        <button onclick="downloadReport()">Скачать отчет</button>
+    </body>
+</html>

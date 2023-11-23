@@ -11,7 +11,7 @@
     <meta property="twitter:card" content="summary_large_image" />
 
     <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/index.css' %}?version=123">
-    <script src="{% static 'myapp/js/indexScriptsAPI.js' %}?version=126"></script>
+    <script src="{% static 'myapp/js/indexScriptsAPI.js' %}?version=124"></script>
   </head>
   <body>
     <div>
@@ -24,10 +24,10 @@
             </span>
             <div class="home-links-container">
               <span>
-                <span class="Navbar-Link">Учет</span>
+                <a href="\record" class="Navbar-Link">Учет</a>
                 <br />
               </span>
-            </div>
+            </div>            
           </div>
         </div>
         <div class="home-section-separator"></div>
@@ -86,6 +86,9 @@
                   class="home-textinput4 input"
                   id="itemBrand"
                 />
+                <div id="errorMesageItem">
+
+                </div>
               </div>
               <div class="home-card-content1">
                 <button onclick="addItem()" class="home-choose1 button Anchor">Добавить</button>

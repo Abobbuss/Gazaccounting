@@ -8,11 +8,15 @@ from django.shortcuts import render
 from django.db.models import Q
 import re
 from rest_framework import status
+from django.http import JsonResponse
 
 
 #index
 def index(request):
     return render(request, 'index.html')
+
+def record(request):
+    return render(request, 'record.html')
 
 # Person
 class PersonCreateView(generics.CreateAPIView):
@@ -67,9 +71,9 @@ class ItemCreateView(generics.CreateAPIView):
     queryset = models.Item.objects.all()
     serializer_class = serializers.ItemSerializer
 
-    def perform_create(self, serializer):
-        name = self.request.data.get('name')
-        brand = self.request.data.get('brand')
+    def create(self, request, *args, **kwargs):
+        name = request.data.get('name')
+        brand = request.data.get('brand')
 
         existing_item = models.Item.objects.filter(name=name, brand=brand).first()
 
@@ -77,9 +81,13 @@ class ItemCreateView(generics.CreateAPIView):
             response_data = {'message': 'Такая вещь уже существует'}
             return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer.save()
-        response_data = {'message': 'Успешно добавлено'}
-        return Response(response_data, status=status.HTTP_201_CREATED)
+        response = super().create(request, *args, **kwargs)
+        response_data = {
+            'message': 'Успешно добавлено',
+            'name': response.data.get('name'),
+            'brand': response.data.get('brand')
+        }
+        return Response(response_data, status=response.status_code)
 
 class ItemListView(generics.ListAPIView):
     queryset = models.Item.objects.all()
