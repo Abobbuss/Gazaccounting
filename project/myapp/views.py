@@ -23,6 +23,38 @@ class PersonCreateView(generics.CreateAPIView):
     queryset = models.Person.objects.all()
     serializer_class = serializers.PersonSerializer
 
+    def create(self, request, *args, **kwargs):
+        city_value = request.data.get('city', None)
+        last_name = request.data.get('last_name', None)
+        first_name = request.data.get('first_name', None)
+        middle_name = request.data.get('middle_name', None)
+
+        # Проверка наличия человека с такими же данными
+        existing_person_query = models.Person.objects.filter(
+            last_name=last_name,
+            first_name=first_name,
+            middle_name=middle_name
+        )
+
+        # Условие для добавления фильтрации по городу, если передано имя города
+        if isinstance(city_value, str):
+            existing_person_query = existing_person_query.filter(city__name=city_value)
+
+        existing_person = existing_person_query.first()
+
+        if existing_person:
+            return Response({'error': 'Person with the same details already exists'})
+
+        # Преобразование значения города в ID, если это строка
+        if isinstance(city_value, str):
+            try:
+                city = models.City.objects.get(name=city_value)
+                request.data['city'] = city.id
+            except models.City.DoesNotExist:
+                return Response({'error': 'City not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        return super().create(request, *args, **kwargs)
+
 class PersonListView(generics.ListAPIView):
     queryset = models.Person.objects.all()
     serializer_class = serializers.PersonSerializer
@@ -79,7 +111,7 @@ class ItemCreateView(generics.CreateAPIView):
 
         if existing_item:
             response_data = {'message': 'Такая вещь уже существует'}
-            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
+            return Response(response_data)
 
         response = super().create(request, *args, **kwargs)
         response_data = {

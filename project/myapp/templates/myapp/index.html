@@ -11,7 +11,8 @@
     <meta property="twitter:card" content="summary_large_image" />
 
     <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/index.css' %}?version=123">
-    <script src="{% static 'myapp/js/indexScriptsAPI.js' %}?version=124"></script>
+    <script type="module" src="{% static 'myapp/js/indexScripts.js' %}?version=150"></script>
+    <script type="module" src="{% static 'myapp/js/ScriptsAPI.js' %}?version=142"></script>
   </head>
   <body>
     <div>
@@ -63,7 +64,7 @@
                 </select>
               </div>
               <div class="home-card-content">
-                <button onclick="addPerson()" class="home-choose button Anchor">Добавить</button>
+                <button onclick="postAddPerson()" class="home-choose button Anchor">Добавить</button>
               </div>
             </div>
             <div class="home-card1">
@@ -91,7 +92,7 @@
                 </div>
               </div>
               <div class="home-card-content1">
-                <button onclick="addItem()" class="home-choose1 button Anchor">Добавить</button>
+                <button onclick="postAddItem()" class="home-choose1 button Anchor">Добавить</button>
               </div>
             </div>
             <div class="home-card2">
@@ -106,16 +107,23 @@
                   oninput="searchNames(this.value)"
                 />
                 <ul id="results"></ul>
-                  <input
-                    type="text"
-                    placeholder="Вещь"
-                    class="home-textinput6 input"
+                <input
+                  type="text"
+                  placeholder="Вещь"
+                  class="home-textinput6 input"
                 />
                 <input
                   type="text"
                   placeholder="Количество"
                   class="home-textinput7 input"
+                  value="1"
                 />
+                <div class="home-card-dowload-QR">
+                  <input type="checkbox" id="checkbox_dowloadQR" />
+                  <label for="checkbox_dowloadQR">Скачать QR</label>
+                  <input type="checkbox" id="checkbox_dowloadDOC" />
+                  <label for="checkbox_dowloadDOC">Скачать документы</label>
+                </div>
               </div>
               <div class="home-card-content2">
                 <button class="home-choose2 button Anchor">Добавить</button>
@@ -125,59 +133,5 @@
         </div>
       </div>
     </div>
-
-<!-- 
-    <script>
-      function addPerson() {
-          var lastName = document.getElementById('last-name');
-          var firstName = document.getElementById('first-name');
-          var middleName = document.getElementById('middle-name');
-          var citySelect = document.getElementById('citySelect');
-  
-          if (lastName && firstName && middleName && citySelect) {
-            var csrfTokenMatch = document.cookie.match(/csrftoken=([^;]+)/);
-
-if (csrfTokenMatch && csrfTokenMatch[1]) {
-    var csrfToken = csrfTokenMatch[1];
-    // Остальной код
-    // ...
-} else {
-    console.error('CSRF token не найден в cookies.');
-}
-  
-              var lastNameValue = lastName.value;
-              var firstNameValue = firstName.value;
-              var middleNameValue = middleName.value;
-              var cityId = citySelect.value;
-  
-              var data = {
-                  "last_name": lastNameValue,
-                  "first_name": firstNameValue,
-                  "middle_name": middleNameValue,
-                  "city_id": cityId  // Отправляем ID города
-              };
-  
-              fetch('http://127.0.0.1:8000/api/person/create/', {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json',
-                      'X-CSRFToken': csrfToken
-                  },
-                  body: JSON.stringify(data),
-              })
-              .then(response => response.json())
-              .then(data => {
-                  console.log('Успешно добавлено:', data);
-                  // Здесь вы можете выполнить дополнительные действия после успешного добавления человека
-              })
-              .catch((error) => {
-                  console.error('Ошибка:', error);
-              });
-          } else {
-              console.error('Не удалось найти один из элементов');
-          }
-      }
-  </script> -->
-
   </body>
 </html>
