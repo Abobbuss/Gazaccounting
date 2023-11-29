@@ -547,6 +547,25 @@ body {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
+#results {
+  position: absolute;
+  width: 100%;
+  max-height: 200px; /* Максимальная высота для прокрутки */
+  overflow-y: auto; /* Добавление вертикальной прокрутки при необходимости */
+  background-color: #fff; /* Цвет фона результатов */
+  border: 1px solid #ccc; /* Граница для результатов */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Тень для эффекта всплывающего окна */
+  z-index: 1; /* Поднимаем результаты над другими элементами */
+}
+
+#results li {
+  padding: 8px;
+  cursor: pointer;
+}
+
+#results li:hover {
+  background-color: #f4f4f4; /* Изменение цвета при наведении курсора */
+}
 .home-textinput5 {
   flex: 1;
   width: 323px;

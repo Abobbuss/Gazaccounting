@@ -43,7 +43,7 @@ class PersonCreateView(generics.CreateAPIView):
         existing_person = existing_person_query.first()
 
         if existing_person:
-            return Response({'error': 'Person with the same details already exists'})
+            return Response({'error': 'Человек с такими данными существует'})
 
         # Преобразование значения города в ID, если это строка
         if isinstance(city_value, str):

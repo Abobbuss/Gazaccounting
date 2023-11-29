@@ -52,3 +52,4 @@ function displayResults(results) {
   });
 }
 
+window.searchNames = searchNames;

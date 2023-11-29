@@ -1,7 +1,8 @@
 var personSearchAPI = 'http://127.0.0.1:8000/api/person/search/';
-var addPersonAPI = 'http://127.0.0.1:8000/api/person/create/';
+var postAddPersonAPI = 'http://127.0.0.1:8000/api/person/create/';
 var getCitiesAPI = 'http://127.0.0.1:8000/api/city/';
-var addItemAPI = 'http://127.0.0.1:8000/api/item/create/';
+var postAddItemAPI = 'http://127.0.0.1:8000/api/item/create/';
+var postAddOwnerShipAPI = '';
 
 export function fetchCsrfToken() {
     var csrfTokenMatch = document.cookie.match(/csrftoken=([^;]+)/);
@@ -37,7 +38,6 @@ function postAddPerson() {
     middle_name: middleName,
     city: cityId,
   };
-  console.log(data)
 
   const csrfTokenMatch = fetchCsrfToken();
 
@@ -46,7 +46,7 @@ function postAddPerson() {
     return;
   }
 
-  fetch('http://127.0.0.1:8000/api/person/create/', {
+  fetch(postAddPersonAPI, {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -61,23 +61,17 @@ function postAddPerson() {
     return response.json();
   })
   .then(data => {
-    
+    console.log(data)
   })
   .catch(error => {
     console.error('Error:', error);
-
-    // Выводим тело ответа в случае ошибки
     if (error.response) {
       error.response.text().then(text => {
         console.error('Response body:', text);
       });
     }
-
-    // Добавьте здесь код для обработки ошибки
   });
 }
-
-
 
 export function postAddItem() {
   var itemName = document.getElementById('itemName');
@@ -102,7 +96,7 @@ export function postAddItem() {
   "brand": itemBrandValue
   };
 
-  fetch(addItemAPI, {
+  fetch(postAddItemAPI, {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
