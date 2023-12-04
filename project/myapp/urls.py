@@ -30,6 +30,7 @@ urlpatterns = [
             path('item/create/', views.ItemCreateView.as_view(), name='item-create'),
             path('item/', views.ItemListView.as_view(), name='item-list'),
             path('item/<int:pk>/', views.ItemDetailView.as_view(), name='item-detail'),
+            path('item/search/<str:search_query>/', views.ItemSearchView.as_view(), name='item-search'),
 
             path('ownership/', views.OwnershipListView.as_view(), name='ownership-list'),
             path('ownership/create/', views.OwnerShipCreateView.as_view(), name='ownership-create'),  

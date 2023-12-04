@@ -11,14 +11,20 @@ class CitySerializer(serializers.ModelSerializer):
         model = models.City
         fields = ('name',)
 
-class PersonSerializer(serializers.ModelSerializer):    
+class PersonSerializer(serializers.ModelSerializer):
+    city_name = serializers.CharField(source='city.name', read_only=True)    
 
     class Meta:
         model = models.Person
         fields = '__all__'
-
-class PersonSearchSerializer(serializers.Serializer):
-    query = serializers.CharField()
+    
+    def to_representation(self, instance):
+        return {
+            'first_name': instance.first_name,
+            'last_name': instance.last_name,
+            'middle_name': instance.middle_name,
+            'city': instance.city.name
+        }
 
 class OwnershipSerializer(serializers.ModelSerializer):
 
@@ -28,7 +34,6 @@ class OwnershipSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         return {
-            'id': instance.id,
             'name': instance.owner.first_name,
             'last_name': instance.owner.last_name,
             'middle_name': instance.owner.middle_name,

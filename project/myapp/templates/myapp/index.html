@@ -10,9 +10,9 @@
     <meta charset="utf-8" />
     <meta property="twitter:card" content="summary_large_image" />
 
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/index.css' %}?version=124">
-    <script type="module" src="{% static 'myapp/js/indexScripts.js' %}?version=152"></script>
-    <script type="module" src="{% static 'myapp/js/ScriptsAPI.js' %}?version=143"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/index.css' %}?version=136">
+    <script type="module" src="{% static 'myapp/js/indexScripts.js' %}?version=164"></script>
+    <script type="module" src="{% static 'myapp/js/ScriptsAPI.js' %}?version=154"></script>
   </head>
   <body>
     <div>
@@ -106,12 +106,14 @@
                   class="home-textinput5 input"
                   oninput="searchNames(this.value)"
                 />
-                <ul id="results"></ul>
+                <ul id="results" style="margin-top: calc(1.28 * var(--dl-space-space-fiveunits));" class="results-container"></ul>
                 <input
                   type="text"
                   placeholder="Вещь"
                   class="home-textinput6 input"
+                  oninput="searchItems(this.value)"
                 />
+                <ul id = "resultsItems" style="margin-top: calc(3.12 * var(--dl-space-space-fiveunits));" class="results-container" ></ul>
                 <input
                   type="text"
                   placeholder="Количество"
@@ -126,7 +128,7 @@
                 </div>
               </div>
               <div class="home-card-content2">
-                <button class="home-choose2 button Anchor">Добавить</button>
+                <button onclick="postAddOwnerShip()" class="home-choose2 button Anchor">Добавить</button>
               </div>
             </div>
           </div>

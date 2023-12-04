@@ -1,3 +1,4 @@
+import json
 from rest_framework import generics
 from . import models
 from . import serializers
@@ -44,7 +45,7 @@ class PersonCreateView(generics.CreateAPIView):
 
         if existing_person:
             return Response({'error': 'Человек с такими данными существует'})
-
+        
         # Преобразование значения города в ID, если это строка
         if isinstance(city_value, str):
             try:
@@ -52,8 +53,15 @@ class PersonCreateView(generics.CreateAPIView):
                 request.data['city'] = city.id
             except models.City.DoesNotExist:
                 return Response({'error': 'City not found'}, status=status.HTTP_404_NOT_FOUND)
-
-        return super().create(request, *args, **kwargs)
+        
+        print(request.data)
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            print(serializer.errors)
+            return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        
+        result = super().create(request, *args, **kwargs)
+        return result
 
 class PersonListView(generics.ListAPIView):
     queryset = models.Person.objects.all()
@@ -129,6 +137,21 @@ class ItemDetailView(generics.RetrieveAPIView):
     queryset = models.Item.objects.all()
     serializer_class = serializers.ItemSerializer
 
+class ItemSearchView(generics.ListAPIView):
+    serializer_class = serializers.ItemSerializer
+
+    def get_queryset(self):
+        search_query = self.kwargs.get('search_query', '').strip()
+
+        if not search_query:
+            return models.Item.objects.all()
+
+        queryset = models.Item.objects.filter(
+            Q(name__icontains=search_query) | Q(brand__icontains=search_query)
+        )
+
+        return queryset
+
 # City
 class CityListView(generics.ListAPIView):
     queryset = models.City.objects.all()
@@ -144,22 +167,43 @@ class OwnerShipCreateView(generics.CreateAPIView):
     serializer_class = serializers.OwnershipSerializer
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        data = request.data
+        owner_name = data['owner']['name']
+        item_name = data['item']['name']
+        quantity = data['quantity']
+        download_qr = data['downloadQR']
+        download_doc = data['downloadDOC']
 
-        if utils.check_existing_record(serializer):
-            return Response({"message": "Эта запись уже существует"})
+        if data is None:
+            return Response({'error': 'No data provided'}, status=status.HTTP_400_BAD_REQUEST)
+        owner_id = utils.check_existing_owner(owner_name)
+        if not owner_id:
+            return Response({"message": "Человек не найден"})
+        print(owner_id)
 
-        created_record = serializer.save()
+        item_id = utils.check_existing_item(item_name)
+        if not item_id:
+            return Response({"message": "Вещь не найдена"})
+        print(item_id)
 
-        qr_data = utils.generate_qr_code(created_record.id)
-        if qr_data is None:
-            return Response({"message": "Не удалось создать qr"})
+        # # Добавление найденных объектов владения
+        # request.data['owner'] = owner_instance.id
+        # request.data['item'] = item_instance.id
 
-        created_record.qr_code.save(f'qr_code_{created_record.id}.png', BytesIO(qr_data), save=True)
+        # # Продолжение остальной части кода как обычно
+        # serializer = self.get_serializer(data=request.data)
+        # serializer.is_valid(raise_exception=True)
+
+        # created_record = serializer.save()
+
+        # qr_data = utils.generate_qr_code(created_record.id)
+        # if qr_data is None:
+        #     return Response({"message": "Не удалось создать qr"})
+
+        # created_record.qr_code.save(f'qr_code_{created_record.id}.png', BytesIO(qr_data), save=True)
 
         return Response({"message": "Запись создана успешно"})
-    
+
 class OwnerShipDetailView(generics.RetrieveAPIView):
     queryset = models.Ownership.objects.all()
     serializer_class = serializers.OwnershipSerializer

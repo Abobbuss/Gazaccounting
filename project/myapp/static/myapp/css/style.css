@@ -27,6 +27,8 @@
   --dl-space-space-fourunits: 32px;
   --dl-space-space-doubleunit: 16px;
   --dl-space-space-tripleunit: 24px;
+  --dl-space-margin-top-results: 1.28;
+  --dl-space-margin-top-results-Items:1.1;
 }
 .teleport-show {
   display: flex !important;

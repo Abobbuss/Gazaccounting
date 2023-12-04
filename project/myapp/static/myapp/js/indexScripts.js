@@ -2,6 +2,26 @@ import * as ScriptsAPI from './ScriptsAPI.js';
 
 
 var personSearchAPI = 'http://127.0.0.1:8000/api/person/search/';
+var itemSearchAPI = 'http://127.0.0.1:8000/api/item/search/';
+
+document.addEventListener('DOMContentLoaded', function() {
+  loadCitiesIntoSelect();
+});
+
+document.querySelector('.home-textinput5').addEventListener('focus', function() {
+  if (this.value.trim() !== '') {
+    searchNames(this.value);
+  }
+});
+
+document.addEventListener('click', function(event) {
+  var homeCard = document.querySelector('.home-card2');
+  var inputField = document.querySelector('.home-textinput5');
+
+  if (!homeCard.contains(event.target) && event.target !== inputField) {
+    document.getElementById('results').innerHTML = '';
+  }
+});
 
 async function loadCitiesIntoSelect() {
   const citySelect = document.getElementById('citySelect');
@@ -20,36 +40,45 @@ async function loadCitiesIntoSelect() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  loadCitiesIntoSelect();
-});
-
-function searchNames(query) {
-  if (!query.trim()) {
-    document.getElementById('results').innerHTML = '';
-    return;
-  }
-
-  var xhr = new XMLHttpRequest();
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState === 4 && xhr.status === 200) {
-      displayResults(JSON.parse(xhr.responseText));
-    }
-  };
-
-  xhr.open('GET', personSearchAPI + encodeURIComponent(query), true);
-  xhr.send();
-}
-
-function displayResults(results) {
-  var resultsList = document.getElementById('results');
+function displayResults(results, resultsId, textInputClass) {
+  var resultsList = document.getElementById(resultsId);
   resultsList.innerHTML = '';
-
   results.forEach(function(result) {
     var li = document.createElement('li');
-    li.textContent = result.last_name + ' ' + result.first_name + ' ' + result.middle_name;
+
+    if (resultsId === 'results') {
+      if (result.middle_name != null) {
+        li.textContent = result.last_name + ' ' + result.first_name + ' ' + result.middle_name + '-' + result.city;
+      } else {
+        li.textContent = result.last_name + ' ' + result.first_name + '-' + result.city;
+      }
+    } else if (resultsId === 'resultsItems') {
+      if (result.brand != null) {
+        li.textContent = result.name + '(' + result.brand + ')';
+      } else {
+        li.textContent = result.name;
+      }
+    }
+
+    li.addEventListener('click', function() {
+      document.querySelector(`.${textInputClass}`).value = li.textContent;
+      resultsList.innerHTML = '';
+    });
+
     resultsList.appendChild(li);
   });
 }
 
+
+function searchNames(query) {
+  search(query, 'results', 'home-textinput5', personSearchAPI)
+    .then(results => displayResults(results, 'results', 'home-textinput5'));
+}
+
+function searchItems(query) {
+  search(query, 'resultsItems', 'home-textinput6', itemSearchAPI)
+    .then(results => displayResults(results, 'resultsItems', 'home-textinput6'));
+}
+
 window.searchNames = searchNames;
+window.searchItems = searchItems;

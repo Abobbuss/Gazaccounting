@@ -3,6 +3,30 @@ from . import models
 from io import BytesIO
 
 
+def check_existing_owner(full_name_city):
+    print(full_name_city)
+    full_name, city = full_name_city.split('-')
+    print(full_name)
+    print(city)
+    # first_name, middle_name, last_name = full_name.split()
+    # print(first_name, middle_name, last_name)
+    # try:
+    #     person = models.Person.objects.get(first_name=first_name, middle_name=middle_name, last_name=last_name, city=city)
+    #     return person.id
+    # except models.Person.DoesNotExist:
+    #     message = "Человек не найден"
+    #     return message
+
+def check_existing_item(item_name):
+    name, brand = item_name.split('(')
+    brand = brand.rstrip(')')  
+
+    try:
+        item = models.Item.objects.get(name=name, brand=brand)
+        return item.id
+    except models.Item.DoesNotExist:
+        return None
+    
 def check_existing_record(serializer):
     owner_id = serializer.validated_data['owner']
     item_id = serializer.validated_data['item']

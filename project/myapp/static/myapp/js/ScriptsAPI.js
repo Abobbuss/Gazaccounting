@@ -1,8 +1,7 @@
-var personSearchAPI = 'http://127.0.0.1:8000/api/person/search/';
 var postAddPersonAPI = 'http://127.0.0.1:8000/api/person/create/';
 var getCitiesAPI = 'http://127.0.0.1:8000/api/city/';
 var postAddItemAPI = 'http://127.0.0.1:8000/api/item/create/';
-var postAddOwnerShipAPI = '';
+var postAddOwnerShipAPI = 'http://127.0.0.1:8000/api/ownership/create/';
 
 export function fetchCsrfToken() {
     var csrfTokenMatch = document.cookie.match(/csrftoken=([^;]+)/);
@@ -133,5 +132,65 @@ function showMessage(message) {
   resultsList.append(message)
 }
 
+export function postAddOwnerShip() {
+  var ownerName = document.querySelector('.home-textinput5').value;
+  var itemName = document.querySelector('.home-textinput6').value;
+  var quantity = document.querySelector('.home-textinput7').value;
+  var downloadQR = document.getElementById('checkbox_dowloadQR').checked;
+  var downloadDOC = document.getElementById('checkbox_dowloadDOC').checked;
+
+  var data = {
+    owner: { name: ownerName },  
+    item: { name: itemName },    
+    quantity: quantity,
+    downloadQR: downloadQR,
+    downloadDOC: downloadDOC
+  };
+  
+  var csrfTokenMatch = fetchCsrfToken();
+
+  fetch(postAddOwnerShipAPI, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': csrfTokenMatch
+    },
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(data => {
+  })
+  .catch(error => {
+    console.error('Ошибка:', error);
+  });
+}
+
+function search(query, resultsId, textInputClass, searchAPI) {
+  return new Promise((resolve, reject) => {
+    if (!query.trim()) {
+      document.getElementById(resultsId).innerHTML = '';
+      resolve([]);  // Пустой результат, так как нет запроса
+      return;
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          const parsedResults = JSON.parse(xhr.responseText);
+          resolve(parsedResults);
+        } else {
+          reject(new Error(`Failed with status ${xhr.status}`));
+        }
+      }
+    };
+
+    xhr.open('GET', searchAPI + encodeURIComponent(query), true);
+    xhr.send();
+  });
+}
+
 window.postAddItem = postAddItem;
 window.postAddPerson = postAddPerson;
+window.postAddOwnerShip = postAddOwnerShip;
+window.search = search;
