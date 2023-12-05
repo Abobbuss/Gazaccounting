@@ -1,0 +1,27 @@
+{%load static%}
+{% csrf_token%}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Должники</title>
+        <meta property="og:title" content="Portfolio Page" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta property="twitter:card" content="summary_large_image" />
+
+        <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/index.css' %}?version=137">
+        <script type="module" src="{% static 'myapp/js/details.js' %}?version=2"></script>
+        <script type="module" src="{% static 'myapp/js/ScriptsAPI.js' %}?version=2"></script>
+      </head>
+<body>
+
+<div id="user-info">
+    <h1>User Information</h1>
+    <div id="user-details"></div>
+    <button onclick="deductItem()">Списать</button>
+    <button onclick="returnItem()">Сдал
+    </button>
+</div>
+</body>
+</html>

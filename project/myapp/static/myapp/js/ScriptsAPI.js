@@ -2,6 +2,8 @@ var postAddPersonAPI = 'http://127.0.0.1:8000/api/person/create/';
 var getCitiesAPI = 'http://127.0.0.1:8000/api/city/';
 var postAddItemAPI = 'http://127.0.0.1:8000/api/item/create/';
 var postAddOwnerShipAPI = 'http://127.0.0.1:8000/api/ownership/create/';
+var getOwnerShipDetailsAPI = 'http://127.0.0.1:8000/api/ownership/'
+
 
 export function fetchCsrfToken() {
     var csrfTokenMatch = document.cookie.match(/csrftoken=([^;]+)/);
@@ -136,32 +138,105 @@ export function postAddOwnerShip() {
   var ownerName = document.querySelector('.home-textinput5').value;
   var itemName = document.querySelector('.home-textinput6').value;
   var quantity = document.querySelector('.home-textinput7').value;
+  var serial_number = document.querySelector('.home-textinput8').value;
   var downloadQR = document.getElementById('checkbox_dowloadQR').checked;
   var downloadDOC = document.getElementById('checkbox_dowloadDOC').checked;
 
   var data = {
-    owner: { name: ownerName },  
-    item: { name: itemName },    
-    quantity: quantity,
-    downloadQR: downloadQR,
-    downloadDOC: downloadDOC
+      owner: { name: ownerName },  
+      item: { name: itemName },
+      serial_number: serial_number,    
+      quantity: quantity,
+      downloadQR: downloadQR,
+      downloadDOC: downloadDOC
   };
-  
+
   var csrfTokenMatch = fetchCsrfToken();
 
   fetch(postAddOwnerShipAPI, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRFToken': csrfTokenMatch
-    },
-    body: JSON.stringify(data)
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfTokenMatch
+      },
+      body: JSON.stringify(data)
   })
-  .then(response => response.json())
-  .then(data => {
+  .then(response => {
+      if (!response.ok) {
+          throw new Error('Network response was not ok');
+      }
+
+      // Проверяем, нужно ли скачивать QR
+      if (downloadQR) {
+          return response.blob();
+      } else {
+          // Если не нужно, возвращаем null, чтобы избежать ошибки в следующем блоке кода
+          return null;
+      }
+  })
+  .then(blob => {
+      // Проверяем, есть ли данные для скачивания QR
+      if (blob !== null) {
+          // qr
+          const urlQR = window.URL.createObjectURL(blob);
+
+          const aQR = document.createElement('a');
+          aQR.href = urlQR;
+          aQR.download = 'qr_code.png';  
+          document.body.appendChild(aQR);
+
+          aQR.click();
+
+          document.body.removeChild(aQR);
+
+          window.URL.revokeObjectURL(urlQR);
+      }
+
+      // Проверяем, нужно ли скачивать документ
+      if (downloadDOC) {
+          return fetch(postAddOwnerShipAPI, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRFToken': csrfTokenMatch
+              },
+              body: JSON.stringify({ downloadDOC: true })
+          });
+      } else {
+          // Если не нужно, возвращаем null
+          return null;
+      }
+  })
+  .then(responseDoc => {
+      // Проверяем, есть ли данные для скачивания документа
+      if (responseDoc !== null) {
+          return responseDoc.blob();
+      } else {
+          // Если не нужно, возвращаем null
+          return null;
+      }
+  })
+  .then(blobDoc => {
+      // Проверяем, есть ли данные для скачивания документа
+      if (blobDoc !== null) {
+          // document
+          const urlDoc = window.URL.createObjectURL(blobDoc);
+
+          const aDoc = document.createElement('a');
+          aDoc.href = urlDoc;
+          aDoc.download = 'document.docx';  
+          document.body.appendChild(aDoc);
+
+          aDoc.click();
+
+          document.body.removeChild(aDoc);
+
+          window.URL.revokeObjectURL(urlDoc);
+      }
   })
   .catch(error => {
-    console.error('Ошибка:', error);
+      console.error('Ошибка:', error);
+      console.log(error.response);
   });
 }
 
@@ -190,7 +265,16 @@ function search(query, resultsId, textInputClass, searchAPI) {
   });
 }
 
+export function getOwnerShipDetails(callback, id) {
+
+  fetch(getOwnerShipDetailsAPI + id)
+      .then(response => response.json())
+      .then(data => callback(data))
+      .catch(error => console.error('Error fetching user info:', error));
+}
+
 window.postAddItem = postAddItem;
 window.postAddPerson = postAddPerson;
 window.postAddOwnerShip = postAddOwnerShip;
 window.search = search;
+window.getOwnerShipDetails = getOwnerShipDetails;

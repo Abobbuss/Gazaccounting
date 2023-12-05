@@ -10,9 +10,9 @@
     <meta charset="utf-8" />
     <meta property="twitter:card" content="summary_large_image" />
 
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/index.css' %}?version=136">
-    <script type="module" src="{% static 'myapp/js/indexScripts.js' %}?version=164"></script>
-    <script type="module" src="{% static 'myapp/js/ScriptsAPI.js' %}?version=154"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/index.css' %}?version=137">
+    <script type="module" src="{% static 'myapp/js/indexScripts.js' %}?version=169"></script>
+    <script type="module" src="{% static 'myapp/js/ScriptsAPI.js' %}?version=159"></script>
   </head>
   <body>
     <div>
@@ -114,6 +114,11 @@
                   oninput="searchItems(this.value)"
                 />
                 <ul id = "resultsItems" style="margin-top: calc(3.12 * var(--dl-space-space-fiveunits));" class="results-container" ></ul>
+                <input
+                type="text"
+                placeholder="Серийный номер"
+                class="home-textinput8 input"
+                />
                 <input
                   type="text"
                   placeholder="Количество"

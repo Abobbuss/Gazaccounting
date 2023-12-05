@@ -5,19 +5,24 @@ from . import serializers
 from rest_framework.response import Response
 from . import utils
 from io import BytesIO
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
 import re
 from rest_framework import status
-from django.http import JsonResponse
+from django.http import JsonResponse, FileResponse
 
 
-#index
+#html
 def index(request):
     return render(request, 'index.html')
 
 def record(request):
     return render(request, 'record.html')
+
+def record_detail(request, pk):
+    record = get_object_or_404(models.Ownership, id=pk)
+    context = {'record': record}
+    return render(request, 'details.html', context)
 
 # Person
 class PersonCreateView(generics.CreateAPIView):
@@ -30,14 +35,12 @@ class PersonCreateView(generics.CreateAPIView):
         first_name = request.data.get('first_name', None)
         middle_name = request.data.get('middle_name', None)
 
-        # Проверка наличия человека с такими же данными
         existing_person_query = models.Person.objects.filter(
             last_name=last_name,
             first_name=first_name,
             middle_name=middle_name
         )
 
-        # Условие для добавления фильтрации по городу, если передано имя города
         if isinstance(city_value, str):
             existing_person_query = existing_person_query.filter(city__name=city_value)
 
@@ -46,15 +49,12 @@ class PersonCreateView(generics.CreateAPIView):
         if existing_person:
             return Response({'error': 'Человек с такими данными существует'})
         
-        # Преобразование значения города в ID, если это строка
         if isinstance(city_value, str):
             try:
-                city = models.City.objects.get(name=city_value)
-                request.data['city'] = city.id
+                request.data['city'] = utils.check_existing_city(city=city_value)
             except models.City.DoesNotExist:
                 return Response({'error': 'City not found'}, status=status.HTTP_404_NOT_FOUND)
         
-        print(request.data)
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
             print(serializer.errors)
@@ -84,15 +84,12 @@ class PersonSearchView(generics.ListAPIView):
 
         q_filter = Q()
 
-        # Фильтр для поиска по Фамилии
         if search_terms:
             q_filter |= Q(last_name__icontains=search_terms[0])
 
-        # Фильтр для поиска по Имени
         if len(search_terms) > 1:
             q_filter |= Q(first_name__icontains=search_terms[1])
 
-        # Фильтр для поиска по Отчеству
         if len(search_terms) > 2:
             q_filter |= Q(middle_name__icontains=' '.join(search_terms[2:]))
 
@@ -168,39 +165,46 @@ class OwnerShipCreateView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         data = request.data
+        print(data)
         owner_name = data['owner']['name']
         item_name = data['item']['name']
+        serial_number = data['serial_number']
         quantity = data['quantity']
         download_qr = data['downloadQR']
         download_doc = data['downloadDOC']
-
         if data is None:
             return Response({'error': 'No data provided'}, status=status.HTTP_400_BAD_REQUEST)
+        
         owner_id = utils.check_existing_owner(owner_name)
         if not owner_id:
             return Response({"message": "Человек не найден"})
-        print(owner_id)
 
         item_id = utils.check_existing_item(item_name)
         if not item_id:
             return Response({"message": "Вещь не найдена"})
-        print(item_id)
 
-        # # Добавление найденных объектов владения
-        # request.data['owner'] = owner_instance.id
-        # request.data['item'] = item_instance.id
+        request.data['owner'] = owner_id
+        request.data['item'] = item_id
 
-        # # Продолжение остальной части кода как обычно
-        # serializer = self.get_serializer(data=request.data)
-        # serializer.is_valid(raise_exception=True)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-        # created_record = serializer.save()
+        created_record = serializer.save()
 
-        # qr_data = utils.generate_qr_code(created_record.id)
-        # if qr_data is None:
-        #     return Response({"message": "Не удалось создать qr"})
+        qr_data = utils.generate_qr_code(created_record.id)
+        if qr_data is None:
+            return Response({"message": "Не удалось создать qr"})
 
-        # created_record.qr_code.save(f'qr_code_{created_record.id}.png', BytesIO(qr_data), save=True)
+        created_record.qr_code.save(f'qr_code_{created_record.id}.png', BytesIO(qr_data), save=True)
+
+        if download_qr:
+            qr_file_path = created_record.qr_code.path
+            return FileResponse(open(qr_file_path, 'rb'), content_type='image/png', as_attachment=True)
+        
+        if download_doc:
+            # doc = utils.create_document(owner_name=owner_name, item_name=item_name, serial_number=serial_number, date=created_record.added_date)
+            # return FileResponse(doc, as_attachment=True, filename='document.docx')
+            return Response({"message": "Запись создана успешно"})
 
         return Response({"message": "Запись создана успешно"})
 

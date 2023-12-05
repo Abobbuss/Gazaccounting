@@ -8,20 +8,21 @@ document.addEventListener('DOMContentLoaded', function() {
   loadCitiesIntoSelect();
 });
 
-document.querySelector('.home-textinput5').addEventListener('focus', function() {
-  if (this.value.trim() !== '') {
-    searchNames(this.value);
-  }
-});
+document.addEventListener('mousedown', closeDropdown('home-textinput5'));
+document.addEventListener('mousedown', closeDropdown('home-textinput6')); 
 
-document.addEventListener('click', function(event) {
-  var homeCard = document.querySelector('.home-card2');
-  var inputField = document.querySelector('.home-textinput5');
+function closeDropdown(targetClass) {
+  return function(event) {
+    var homeCard = document.querySelector('.home-card2');
+    var inputField = document.querySelector('.' + targetClass);
 
-  if (!homeCard.contains(event.target) && event.target !== inputField) {
-    document.getElementById('results').innerHTML = '';
-  }
-});
+    if (!homeCard.contains(event.target) && event.target !== inputField) {
+      setTimeout(() => {
+        document.getElementById('results').innerHTML = '';
+      }, 0);
+    }
+  };
+}
 
 async function loadCitiesIntoSelect() {
   const citySelect = document.getElementById('citySelect');
@@ -68,7 +69,6 @@ function displayResults(results, resultsId, textInputClass) {
     resultsList.appendChild(li);
   });
 }
-
 
 function searchNames(query) {
   search(query, 'results', 'home-textinput5', personSearchAPI)

@@ -1,27 +1,54 @@
 import qrcode
 from . import models
 from io import BytesIO
+from django.shortcuts import get_object_or_404
+from docx import Document
+from docx.shared import Pt
 
 
 def check_existing_owner(full_name_city):
-    print(full_name_city)
-    full_name, city = full_name_city.split('-')
-    print(full_name)
-    print(city)
-    # first_name, middle_name, last_name = full_name.split()
-    # print(first_name, middle_name, last_name)
-    # try:
-    #     person = models.Person.objects.get(first_name=first_name, middle_name=middle_name, last_name=last_name, city=city)
-    #     return person.id
-    # except models.Person.DoesNotExist:
-    #     message = "Человек не найден"
-    #     return message
+    full_name, city = full_name_city.split('-') 
+    
+    name_parts = full_name.split()
+    
+    if len(name_parts) == 2:
+        last_name, first_name  = name_parts
+        middle_name = None
+    elif len(name_parts) == 3:
+        last_name, first_name, middle_name = name_parts
+    else:
+        raise ValueError("Некорректный формат ФИО")
 
-def check_existing_item(item_name):
-    name, brand = item_name.split('(')
-    brand = brand.rstrip(')')  
+    city_id = check_existing_city(city=city)
 
     try:
+        person = models.Person.objects.get(
+            first_name=first_name,
+            last_name=last_name, 
+            middle_name=middle_name,  
+            city=city_id
+        )
+        return person.id
+    except models.Person.DoesNotExist:
+        message = "Человек не найден"
+        return message
+
+def check_existing_city(city):
+    city_obj = get_object_or_404(models.City, name=city)
+    return city_obj.id
+
+def check_existing_item(item_name):
+    parts = item_name.split('(')
+    
+    if len(parts) > 1:
+        name = parts[0].strip()
+        brand = parts[1].rstrip(')').strip()
+    else:
+        name = item_name.strip()
+        brand = None
+
+    try:
+        # Ищем вещь по названию и бренду
         item = models.Item.objects.get(name=name, brand=brand)
         return item.id
     except models.Item.DoesNotExist:
@@ -58,3 +85,34 @@ def generate_qr_code(ownership_id):
     img_bytes = img_byte_array.getvalue()
 
     return img_bytes
+
+def create_document(owner_name, item_name, serial_number, date):
+    # Создаем новый документ
+    doc = Document()
+
+    # Добавляем заголовок
+    title = doc.add_paragraph('Заявление')
+    title.alignment = 1  # Выравнивание по центру
+
+    # Добавляем информацию о вещи и владельце
+    info = doc.add_paragraph(f'Выдается Вещь({item_name}) ({serial_number}) такому-то человеку({owner_name}).')
+
+    # Добавляем дату
+    date_paragraph = doc.add_paragraph(f'Дата: {date.strftime("%Y-%m-%d")}')
+    
+    # Добавляем место для подписи
+    signature_line = doc.add_paragraph('_______________________')
+    signature_line.alignment = 1  # Выравнивание по центру
+
+    # Устанавливаем размер шрифта для всего документа
+    for paragraph in doc.paragraphs:
+        for run in paragraph.runs:
+            font = run.font
+            font.size = Pt(12)
+
+    # Создаем объект BytesIO для хранения данных документа
+    doc_buffer = BytesIO()
+    doc.save(doc_buffer)
+    doc_buffer.seek(0)
+
+    return doc_buffer

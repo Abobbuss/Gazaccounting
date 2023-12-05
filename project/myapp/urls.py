@@ -16,6 +16,7 @@ shema_view = swagger_get_shema_view(
 urlpatterns = [
     path('', views.index, name='index'),
     path('record', views.record, name='record'),
+    path('record_detail/<int:pk>/', views.record_detail, name='record_detail'),
     path('api/',
         include([
             path('swagger/schema/', shema_view.with_ui('swagger', cache_timeout=0)),
