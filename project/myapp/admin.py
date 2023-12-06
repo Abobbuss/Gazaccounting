@@ -2,9 +2,12 @@ from django.contrib import admin
 from . import models
 
 class OwnershipAdmin(admin.ModelAdmin):
-    list_display = ['owner', 'item', 'added_date']
+    list_display = ['owner', 'item', 'brand', 'added_date']  # Добавлено отображение бренда
     ordering = ['owner__last_name', 'owner__first_name', 'item__name', 'added_date']
     search_fields = ['owner__first_name', 'owner__last_name', 'item__name']
+
+    def brand(self, obj):
+        return obj.item.brand
 
 admin.site.register(models.Ownership, OwnershipAdmin)
 

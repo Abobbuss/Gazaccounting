@@ -235,10 +235,10 @@ class OwnerShipRecordCountView(generics.RetrieveAPIView):
         city_name = request.query_params.get('city_name', None)
         item_id = request.query_params.get('item_id', None)
 
-        if city_name:
+        if city_name or item_id:
             queryset = utils.count_items_by_city(city_name, item_id)
         else:
-            queryset = utils.count_items_by_city(item_id=item_id)
+            # Возвращаем все данные без фильтрации
+            queryset = utils.count_items_by_city()
 
-        # Возврат результата
-        return Response(queryset)  
+        return Response(queryset)

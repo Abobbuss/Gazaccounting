@@ -131,13 +131,17 @@
   padding-bottom: var(--dl-space-space-doubleunit);
   background-color: var(--dl-color-gray-black);
 }
+.home-table1{
+  flex: 0 0 auto;
+  width: 100%;
+  margin-top: var(--dl-space-space-doubleunit);
+  margin-bottom: var(--dl-space-space-doubleunit);
+}
 .home-container04 {
   flex: 0 0 auto;
   width: 100%;
   display: flex;
-  margin-top: var(--dl-space-space-doubleunit);
   align-items: flex-start;
-  margin-bottom: var(--dl-space-space-doubleunit);
 }
 .home-container05 {
   flex: 0 0 auto;

@@ -245,7 +245,7 @@ function search(query, resultsId, textInputClass, searchAPI) {
   return new Promise((resolve, reject) => {
     if (!query.trim()) {
       document.getElementById(resultsId).innerHTML = '';
-      resolve([]);  // Пустой результат, так как нет запроса
+      resolve([]); 
       return;
     }
 
@@ -280,19 +280,18 @@ export function getOwnerShipDetails(callback, id) {
 export async function getOwnerShipRecordCount(city, item) {
   var csrfTokenMatch = fetchCsrfToken();
 
-  var data = {
-    "city": city,
-    "item": item
-    };
-  console.log(2)
+  const params = new URLSearchParams();
+  params.append('city', city);
+  params.append('item', item);
 
-  return fetch(getOnwerShipRecordCount, {
+  const apiUrlWithParams = `${getOnwerShipRecordCount}?${params.toString()}`;
+
+  return fetch(apiUrlWithParams, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
       'X-CSRFToken': csrfTokenMatch
     },
-    body: JSON.stringify(data),
   })
   .then(response => {
     if (!response.ok) {
@@ -301,6 +300,7 @@ export async function getOwnerShipRecordCount(city, item) {
     return response.json();
   });
 }
+
 
 window.postAddItem = postAddItem;
 window.postAddPerson = postAddPerson;

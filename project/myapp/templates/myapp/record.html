@@ -48,7 +48,9 @@
                     type="text"
                     placeholder="Вещь"
                     class="home-textinput1 input"
+                    oninput="searchItems(this.value)"
                   />
+                  <ul id = "resultsItems" style="margin-top: calc(3.12 * var(--dl-space-space-fiveunits));" class="results-container" ></ul>
                 </div>
                 <div class="home-container03">
                   <button class="home-choose button Anchor">
@@ -57,12 +59,12 @@
                 </div>
               </div>
             </div>
-            <div class="home-container04">
-              <div class="home-container05"><span>Город</span></div>
-              <div class="home-container06">
-                <span class="home-text06">Вещь</span>
+            <div class = "home-table1">
+              <div class="home-container04">
+                <div class="home-container05"><span>Город</span></div>
+                <div class="home-container06"><span class="home-text06">Вещь</span></div>
+                <div class="home-container07"><span>Количество</span></div>
               </div>
-              <div class="home-container07"><span>Количество</span></div>
             </div>
             <div class="home-container08">
               <div class="home-container09">

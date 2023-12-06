@@ -41,7 +41,7 @@ async function loadCitiesIntoSelect() {
   }
 }
 
-function displayResults(results, resultsId, textInputClass) {
+export function displayResults(results, resultsId, textInputClass) {
   var resultsList = document.getElementById(resultsId);
   resultsList.innerHTML = '';
   results.forEach(function(result) {

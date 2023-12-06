@@ -120,7 +120,6 @@ def create_document(owner_name, item_name, serial_number, date):
     return doc_buffer
 
 def filter_ownership_data(person_id, item_id, added_date, city_name):
-    # Формирование фильтрационных условий
     filters = Q()
 
     if person_id:
@@ -135,7 +134,6 @@ def filter_ownership_data(person_id, item_id, added_date, city_name):
     if city_name:
         filters &= Q(owner__city__name=city_name)
 
-    # Применение фильтрации и сортировки
     queryset = models.Ownership.objects.filter(filters).order_by('owner__last_name', 'item__name', 'added_date')
 
     return queryset
@@ -150,6 +148,6 @@ def count_items_by_city(city_name=None, item_id=None):
     if item_id:
         filters &= Q(item__id=item_id)
 
-    queryset = models.Ownership.objects.filter(filters).values('owner__city__name', 'item__name').annotate(item_count=Count('item'))
+    queryset = models.Ownership.objects.filter(filters).values('owner__city__name', 'item__name', 'item__brand').annotate(item_count=Count('item')).order_by('owner__city__name', 'item__name', 'item__brand')
 
     return queryset
