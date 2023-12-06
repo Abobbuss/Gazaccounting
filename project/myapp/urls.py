@@ -34,8 +34,10 @@ urlpatterns = [
             path('item/search/<str:search_query>/', views.ItemSearchView.as_view(), name='item-search'),
 
             path('ownership/', views.OwnershipListView.as_view(), name='ownership-list'),
-            path('ownership/create/', views.OwnerShipCreateView.as_view(), name='ownership-create'),  
-            path('ownership/<int:pk>/', views.OwnerShipDetailView.as_view(), name='ownership-detail')
+            path('ownership/create/', views.OwnerShipCreateView.as_view(), name='ownership-create'),
+            path('ownership/record/', views.OwnerShipRecordView.as_view(), name='ownership-record' ),
+            path('ownership/recordCount/', views.OwnerShipRecordCountView.as_view(), name='ownership-recordCount'),
+            path('ownership/<int:pk>/', views.OwnerShipDetailView.as_view(), name='ownership-detail'),
         ]))
 ]
 

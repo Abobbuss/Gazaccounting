@@ -211,3 +211,34 @@ class OwnerShipCreateView(generics.CreateAPIView):
 class OwnerShipDetailView(generics.RetrieveAPIView):
     queryset = models.Ownership.objects.all()
     serializer_class = serializers.OwnershipSerializer
+
+class OwnerShipRecordView(generics.RetrieveAPIView):
+    queryset = models.Ownership.objects.all()
+    serializer_class = serializers.OwnershipSerializer
+
+    def get(self, request):
+        person_id = request.query_params.get('person_id', None)
+        item_id = request.query_params.get('item_id', None)
+        added_date = request.query_params.get('added_date', None)
+        city_name = request.query_params.get('city_name', None)
+
+        queryset = utils.filter_ownership_data(person_id, item_id, added_date, city_name)
+
+        serializer = serializers.OwnershipSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
+class OwnerShipRecordCountView(generics.RetrieveAPIView):
+    queryset = models.Ownership.objects.all()
+    serializer_class = serializers.OwnershipSerializer
+
+    def get(self, request):
+        city_name = request.query_params.get('city_name', None)
+        item_id = request.query_params.get('item_id', None)
+
+        if city_name:
+            queryset = utils.count_items_by_city(city_name, item_id)
+        else:
+            queryset = utils.count_items_by_city(item_id=item_id)
+
+        # Возврат результата
+        return Response(queryset)  

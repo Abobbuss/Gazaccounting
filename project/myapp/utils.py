@@ -4,6 +4,8 @@ from io import BytesIO
 from django.shortcuts import get_object_or_404
 from docx import Document
 from docx.shared import Pt
+from django.db.models import Q
+from django.db.models import Count
 
 
 def check_existing_owner(full_name_city):
@@ -116,3 +118,38 @@ def create_document(owner_name, item_name, serial_number, date):
     doc_buffer.seek(0)
 
     return doc_buffer
+
+def filter_ownership_data(person_id, item_id, added_date, city_name):
+    # Формирование фильтрационных условий
+    filters = Q()
+
+    if person_id:
+        filters &= Q(owner__id=person_id)
+
+    if item_id:
+        filters &= Q(item__id=item_id)
+
+    if added_date:
+        filters &= Q(added_date=added_date)
+
+    if city_name:
+        filters &= Q(owner__city__name=city_name)
+
+    # Применение фильтрации и сортировки
+    queryset = models.Ownership.objects.filter(filters).order_by('owner__last_name', 'item__name', 'added_date')
+
+    return queryset
+
+
+def count_items_by_city(city_name=None, item_id=None):
+    filters = Q()
+
+    if city_name:
+        filters &= Q(owner__city__name=city_name)
+
+    if item_id:
+        filters &= Q(item__id=item_id)
+
+    queryset = models.Ownership.objects.filter(filters).values('owner__city__name', 'item__name').annotate(item_count=Count('item'))
+
+    return queryset

@@ -8,48 +8,102 @@
         <meta property="og:title" content="Portfolio Page" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta charset="utf-8" />
-        <meta property="twitter:card" content="summary_large_image" />
     
-        <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/record.css' %}?version=121">
-        <script type="module" src="{% static 'myapp/js/indexScriptsAPI_v131.js' %}"></script>
+        <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/record.css' %}?version=137">
+        <script type="module" src="{% static 'myapp/js/record.js' %}?version=1"></script>
+        <script type="module" src="{% static 'myapp/js/ScriptsAPI.js' %}?version=1"></script>
     </head>
     <body>
-        <div class="record-container">
-
+      <div>
+        <div class="home-container">
+          <div data-role="Header" class="home-navbar-container">
+            <div class="home-navbar">
+              <span class="home-heading">
+                <span>Добавить</span>
+                <br />
+              </span>
+              <div class="home-links-container">
+                <span>
+                  <span class="Navbar-Link">Учет</span>
+                  <br />
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="home-section-separator"></div>
+          <div class="home-pricing">
+            <div class="home-heading-container">
+              <h1 class="home-text04">Учет</h1>
+            </div>
+            <div class="home-pricing-card-container">
+              <div class="home-container01">
+                <div class="home-container02">
+                  <input
+                    type="text"
+                    placeholder="Город"
+                    class="home-textinput input"
+                    onchange=""
+                  />
+                  <input
+                    type="text"
+                    placeholder="Вещь"
+                    class="home-textinput1 input"
+                  />
+                </div>
+                <div class="home-container03">
+                  <button class="home-choose button Anchor">
+                    Скачать данные
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="home-container04">
+              <div class="home-container05"><span>Город</span></div>
+              <div class="home-container06">
+                <span class="home-text06">Вещь</span>
+              </div>
+              <div class="home-container07"><span>Количество</span></div>
+            </div>
+            <div class="home-container08">
+              <div class="home-container09">
+                <div class="home-container10">
+                  <input
+                    type="text"
+                    placeholder="ФИО"
+                    class="home-textinput2 input"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Вещь"
+                    class="home-textinput3 input"
+                  />
+                </div>
+                <div class="home-container11">
+                  <input
+                    type="text"
+                    placeholder="Город"
+                    class="home-textinput4 input"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Дата"
+                    class="home-textinput5 input"
+                  />
+                </div>
+              </div>
+              <div class="home-container12">
+                <button class="home-choose1 button Anchor">Скачать данные</button>
+              </div>
+            </div>
+            <div class="home-container13">
+              <div class="home-container14"><span>ФИО</span></div>
+              <div class="home-container15"><span>Город</span></div>
+              <div class="home-container16"><span>Вещь</span></div>
+              <div class="home-container17"><span>Дата выдачи</span></div>
+              <div class="home-container18"><span>Ссылка на QR</span></div>
+            </div>
+          </div>
         </div>
-        <h1>Общий учет</h1>
-
-        <label for="cities">Выберите город:</label>
-        <select id="cities">
-            <!-- Варианты городов -->
-            <option value="city1">Город 1</option>
-            <option value="city2">Город 2</option>
-            <!-- Добавьте другие города по мере необходимости -->
-        </select>
-
-        <label for="search">Умный поиск:</label>
-        <input type="text" id="search" placeholder="Введите название или марку вещи">
-
-        <div id="items">
-            <!-- Блок с умным поиском -->
-            <p>Название1 (Марка1)</p>
-            <p>Название2 (Марка2)</p>
-            <!-- Добавьте другие вещи по мере необходимости -->
-        </div>
-
-        <table id="data-table">
-            <thead>
-                <tr>
-                    <th>Город</th>
-                    <th>Вещь</th>
-                    <th>Количество</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Данные таблицы будут заполняться динамически с помощью JavaScript -->
-            </tbody>
-        </table>
-
-        <button onclick="downloadReport()">Скачать отчет</button>
+      </div>
     </body>
 </html>

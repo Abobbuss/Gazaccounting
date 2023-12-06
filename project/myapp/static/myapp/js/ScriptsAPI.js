@@ -3,6 +3,7 @@ var getCitiesAPI = 'http://127.0.0.1:8000/api/city/';
 var postAddItemAPI = 'http://127.0.0.1:8000/api/item/create/';
 var postAddOwnerShipAPI = 'http://127.0.0.1:8000/api/ownership/create/';
 var getOwnerShipDetailsAPI = 'http://127.0.0.1:8000/api/ownership/'
+var getOnwerShipRecordCount = 'http://127.0.0.1:8000/api/ownership/recordCount/';
 
 
 export function fetchCsrfToken() {
@@ -267,10 +268,38 @@ function search(query, resultsId, textInputClass, searchAPI) {
 
 export function getOwnerShipDetails(callback, id) {
 
+
+  var csrfTokenMatch = fetchCsrfToken();
+
   fetch(getOwnerShipDetailsAPI + id)
       .then(response => response.json())
       .then(data => callback(data))
       .catch(error => console.error('Error fetching user info:', error));
+}
+
+export async function getOwnerShipRecordCount(city, item) {
+  var csrfTokenMatch = fetchCsrfToken();
+
+  var data = {
+    "city": city,
+    "item": item
+    };
+  console.log(2)
+
+  return fetch(getOnwerShipRecordCount, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': csrfTokenMatch
+    },
+    body: JSON.stringify(data),
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`Ошибка запроса: ${response.statusText}`);
+    }
+    return response.json();
+  });
 }
 
 window.postAddItem = postAddItem;
@@ -278,3 +307,4 @@ window.postAddPerson = postAddPerson;
 window.postAddOwnerShip = postAddOwnerShip;
 window.search = search;
 window.getOwnerShipDetails = getOwnerShipDetails;
+window.getOwnerShipRecordCount = getOwnerShipRecordCount;
