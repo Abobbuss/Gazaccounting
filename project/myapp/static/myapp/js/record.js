@@ -1,5 +1,5 @@
 import * as ScriptsAPI from './ScriptsAPI.js';
-import {  } from './indexScripts';
+import { displayResults } from './general.js';
 
 
 var personSearchAPI = 'http://127.0.0.1:8000/api/person/search/';
@@ -56,10 +56,15 @@ export function displayDataInTable(data) {
   });
 }
 
-// function searchItems(query) {
-//     search(query, 'resultsItems', 'home-textinput1', itemSearchAPI)
-//     .then(results => displayResults(results, 'resultsItems', 'home-textinput6'));
-// }
+function searchItems(query) {
+    search(query, 'resultsItems', 'home-textinput1', itemSearchAPI)
+    .then(results => displayResults(results, 'resultsItems', 'home-textinput1'));
+}
 
+export function me (){
+  console.log(2)
+}
 
-// window.searchItems = searchItems;
+window.me = me;
+window.searchItems = searchItems;
+window.OwnerShipRecordCount = OwnerShipRecordCount;

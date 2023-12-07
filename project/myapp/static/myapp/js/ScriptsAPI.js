@@ -167,18 +167,14 @@ export function postAddOwnerShip() {
           throw new Error('Network response was not ok');
       }
 
-      // Проверяем, нужно ли скачивать QR
       if (downloadQR) {
           return response.blob();
       } else {
-          // Если не нужно, возвращаем null, чтобы избежать ошибки в следующем блоке кода
           return null;
       }
   })
   .then(blob => {
-      // Проверяем, есть ли данные для скачивания QR
       if (blob !== null) {
-          // qr
           const urlQR = window.URL.createObjectURL(blob);
 
           const aQR = document.createElement('a');
@@ -193,7 +189,6 @@ export function postAddOwnerShip() {
           window.URL.revokeObjectURL(urlQR);
       }
 
-      // Проверяем, нужно ли скачивать документ
       if (downloadDOC) {
           return fetch(postAddOwnerShipAPI, {
               method: 'POST',
@@ -204,23 +199,18 @@ export function postAddOwnerShip() {
               body: JSON.stringify({ downloadDOC: true })
           });
       } else {
-          // Если не нужно, возвращаем null
           return null;
       }
   })
   .then(responseDoc => {
-      // Проверяем, есть ли данные для скачивания документа
       if (responseDoc !== null) {
           return responseDoc.blob();
       } else {
-          // Если не нужно, возвращаем null
           return null;
       }
   })
   .then(blobDoc => {
-      // Проверяем, есть ли данные для скачивания документа
       if (blobDoc !== null) {
-          // document
           const urlDoc = window.URL.createObjectURL(blobDoc);
 
           const aDoc = document.createElement('a');

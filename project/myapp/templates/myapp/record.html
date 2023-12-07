@@ -9,9 +9,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta charset="utf-8" />
     
-        <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/record.css' %}?version=137">
-        <script type="module" src="{% static 'myapp/js/record.js' %}?version=1"></script>
-        <script type="module" src="{% static 'myapp/js/ScriptsAPI.js' %}?version=1"></script>
+        <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/record.css' %}?version=3">
+        <script type="module" src="{% static 'myapp/js/record.js' %}?version=2"></script>
+        <script type="module" src="{% static 'myapp/js/ScriptsAPI.js' %}?version=2"></script>
     </head>
     <body>
       <div>
@@ -44,13 +44,14 @@
                     class="home-textinput input"
                     onchange=""
                   />
+                  <ul id="resultsCities" style="margin-top: calc(1.28 * var(--dl-space-space-fiveunits));" class="results-container"></ul>
                   <input
                     type="text"
                     placeholder="Вещь"
                     class="home-textinput1 input"
                     oninput="searchItems(this.value)"
                   />
-                  <ul id = "resultsItems" style="margin-top: calc(3.12 * var(--dl-space-space-fiveunits));" class="results-container" ></ul>
+                  <ul id = "resultsItems" style="margin-top: calc(1.12 * var(--dl-space-space-fiveunits));" class="results-container" ></ul>
                 </div>
                 <div class="home-container03">
                   <button class="home-choose button Anchor">

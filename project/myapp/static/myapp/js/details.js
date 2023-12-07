@@ -19,14 +19,3 @@ function updateUserInfo(data) {
     `;
 }
 
-function deductItem() {
-    // Логика для списания предмета
-    console.log('Item deducted');
-}
-
-function returnItem() {
-    // Логика для возврата предмета с учетом выбора из выпадающего списка
-    const returnOptions = document.getElementById('return-options');
-    const selectedOption = returnOptions.value;
-    console.log('Item returned with option:', selectedOption);
-}

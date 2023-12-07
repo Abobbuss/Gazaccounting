@@ -104,10 +104,32 @@
   width: 189px;
   box-shadow: 5px 5px 10px 0px #d4d4d4;
   text-align: center;
+  flex: 1;
   line-height: 1.7;
   margin-left: var(--dl-space-space-doubleunit);
   margin-bottom: var(--dl-space-space-halfunit);
 }
+.results-container {
+  width: 323px;
+  max-height: 215px;
+  overflow-y: auto;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  border-top: none;
+  position: relative; /* Используем relative вместо absolute */
+}
+
+.results-container li {
+  padding: 8px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+}
+
+.results-container li:hover {
+  background-color: #f4f4f4;
+}
+
 .home-container03 {
   flex: 0 0 auto;
   width: 730px;
@@ -130,6 +152,9 @@
   padding-right: 50px;
   padding-bottom: var(--dl-space-space-doubleunit);
   background-color: var(--dl-color-gray-black);
+}
+.poiskLupa{
+  margin: 0 0 0 10px;
 }
 .home-table1{
   flex: 0 0 auto;
