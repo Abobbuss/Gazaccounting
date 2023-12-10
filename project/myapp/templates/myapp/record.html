@@ -10,8 +10,10 @@
         <meta charset="utf-8" />
     
         <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/record.css' %}?version=3">
-        <script type="module" src="{% static 'myapp/js/record.js' %}?version=2"></script>
-        <script type="module" src="{% static 'myapp/js/ScriptsAPI.js' %}?version=2"></script>
+        <script type="module" src="{% static 'myapp/js/record.js' %}?version=3"></script>
+        <script type="module" src="{% static 'myapp/js/general.js' %}?version=3"></script>
+        <script type="module" src="{% static 'myapp/js/ScriptsAPI.js' %}?version=3"></script>
+        <script src="./node_modules/jquery/dist/jquery.min.js"></script>
     </head>
     <body>
       <div>
@@ -38,20 +40,24 @@
             <div class="home-pricing-card-container">
               <div class="home-container01">
                 <div class="home-container02">
-                  <input
-                    type="text"
-                    placeholder="Город"
-                    class="home-textinput input"
-                    onchange=""
-                  />
-                  <ul id="resultsCities" style="margin-top: calc(1.28 * var(--dl-space-space-fiveunits));" class="results-container"></ul>
-                  <input
+                  <div>
+                    <input
+                      type="text"
+                      placeholder="Город"
+                      class="home-textinput input"
+                      id="cityInput"
+                      oninput="searchCities(this.value)"
+                    />
+                    <ul id="resultsCities"  class="results-container"></ul>
+                  </div>
+                  <div>
+                    <input
                     type="text"
                     placeholder="Вещь"
                     class="home-textinput1 input"
-                    oninput="searchItems(this.value)"
-                  />
-                  <ul id = "resultsItems" style="margin-top: calc(1.12 * var(--dl-space-space-fiveunits));" class="results-container" ></ul>
+                    />
+                    <ul id = "resultsItems" style="margin-top: calc(1.12 * var(--dl-space-space-fiveunits));" class="results-container" ></ul>
+                  </div>
                 </div>
                 <div class="home-container03">
                   <button class="home-choose button Anchor">

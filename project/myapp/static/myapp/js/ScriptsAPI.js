@@ -114,11 +114,8 @@ export function postAddItem() {
   })
   .then(data => {
     if (data && data.message === 'Успешно добавлено') {
-        console.log('Вещь добавлена успешно:', data);
-        showMessage(data.message, true);
     } else {
         console.log(data);
-        showMessage(data.message || "Произошла ошибка");
     }
   })
   .catch((error) => {
@@ -231,11 +228,10 @@ export function postAddOwnerShip() {
   });
 }
 
-function search(query, resultsId, textInputClass, searchAPI) {
+function search(query, searchAPI) {
   return new Promise((resolve, reject) => {
     if (!query.trim()) {
-      document.getElementById(resultsId).innerHTML = '';
-      resolve([]); 
+      resolve([]);
       return;
     }
 
@@ -244,6 +240,7 @@ function search(query, resultsId, textInputClass, searchAPI) {
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
           const parsedResults = JSON.parse(xhr.responseText);
+          console.log(parsedResults)
           resolve(parsedResults);
         } else {
           reject(new Error(`Failed with status ${xhr.status}`));
@@ -251,7 +248,8 @@ function search(query, resultsId, textInputClass, searchAPI) {
       }
     };
 
-    xhr.open('GET', searchAPI + encodeURIComponent(query), true);
+    const encodedQuery = encodeURIComponent(query);
+    xhr.open('GET', `${searchAPI}${encodedQuery}`, true);
     xhr.send();
   });
 }

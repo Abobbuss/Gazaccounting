@@ -30,38 +30,31 @@ class PersonCreateView(generics.CreateAPIView):
     serializer_class = serializers.PersonSerializer
 
     def create(self, request, *args, **kwargs):
-        city_value = request.data.get('city', None)
-        last_name = request.data.get('last_name', None)
-        first_name = request.data.get('first_name', None)
-        middle_name = request.data.get('middle_name', None)
+        city_value = request.data.get('city')
+        last_name = request.data.get('last_name')
+        first_name = request.data.get('first_name')
+        middle_name = request.data.get('middle_name')
 
-        existing_person_query = models.Person.objects.filter(
-            last_name=last_name,
-            first_name=first_name,
-            middle_name=middle_name
-        )
+        city_id = utils.check_existing_city(city=city_value)
 
-        if isinstance(city_value, str):
-            existing_person_query = existing_person_query.filter(city__name=city_value)
+        if not city_id:
+            message = 'Город не найден'
+            return Response({'error': message})
 
-        existing_person = existing_person_query.first()
+        request.data['city'] = city_id
 
-        if existing_person:
-            return Response({'error': 'Человек с такими данными существует'})
-        
-        if isinstance(city_value, str):
-            try:
-                request.data['city'] = utils.check_existing_city(city=city_value)
-            except models.City.DoesNotExist:
-                return Response({'error': 'City not found'}, status=status.HTTP_404_NOT_FOUND)
-        
+        if utils.check_person_existing(last_name, first_name, middle_name, city_id):
+            message = 'Человек с такими данными существует'
+            return Response({'error': message})
+
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
-            print(serializer.errors)
             return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-        
-        result = super().create(request, *args, **kwargs)
-        return result
+        else:
+            serializer.save()
+
+        message = "Человек добавлен"
+        return Response({'response_data': message})
 
 class PersonListView(generics.ListAPIView):
     queryset = models.Person.objects.all()
@@ -80,28 +73,7 @@ class PersonSearchView(generics.ListAPIView):
         if not search_query:
             return models.Person.objects.all()
 
-        search_terms = re.split(r'\s+', search_query)
-
-        q_filter = Q()
-
-        if search_terms:
-            q_filter |= Q(last_name__icontains=search_terms[0])
-
-        if len(search_terms) > 1:
-            q_filter |= Q(first_name__icontains=search_terms[1])
-
-        if len(search_terms) > 2:
-            q_filter |= Q(middle_name__icontains=' '.join(search_terms[2:]))
-
-        q_filter |= (
-            Q(last_name__icontains=search_query) |
-            Q(first_name__icontains=search_query) |
-            Q(middle_name__icontains=search_query)
-        )
-
-        queryset = models.Person.objects.filter(q_filter)
-
-        return queryset
+        return utils.search_persons(search_query)
     
 # Item
 class ItemCreateView(generics.CreateAPIView):
@@ -115,16 +87,13 @@ class ItemCreateView(generics.CreateAPIView):
         existing_item = models.Item.objects.filter(name=name, brand=brand).first()
 
         if existing_item:
-            response_data = {'message': 'Такая вещь уже существует'}
-            return Response(response_data)
+            message = 'Такая вещь уже существует'
+            return Response({'error': message})
 
         response = super().create(request, *args, **kwargs)
-        response_data = {
-            'message': 'Успешно добавлено',
-            'name': response.data.get('name'),
-            'brand': response.data.get('brand')
-        }
-        return Response(response_data, status=response.status_code)
+
+        message =  'Успешно добавлено'
+        return Response({'response_data': message}, status=response.status_code)
 
 class ItemListView(generics.ListAPIView):
     queryset = models.Item.objects.all()
@@ -143,16 +112,23 @@ class ItemSearchView(generics.ListAPIView):
         if not search_query:
             return models.Item.objects.all()
 
-        queryset = models.Item.objects.filter(
-            Q(name__icontains=search_query) | Q(brand__icontains=search_query)
-        )
-
-        return queryset
+        return utils.search_items(search_query)
 
 # City
 class CityListView(generics.ListAPIView):
     queryset = models.City.objects.all()
     serializer_class = serializers.CitySerializer
+
+class CitySearchView(generics.ListAPIView):
+    serializer_class = serializers.CitySerializer
+
+    def get_queryset(self):
+        search_query = self.kwargs.get('search_query', '').strip()
+
+        if not search_query:
+            return models.Item.objects.all()
+
+        return utils.search_city(search_query)
 
 # Ownership
 class OwnershipListView(generics.ListAPIView):
@@ -165,37 +141,65 @@ class OwnerShipCreateView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         data = request.data
-        print(data)
         owner_name = data['owner']['name']
         item_name = data['item']['name']
         serial_number = data['serial_number']
-        quantity = data['quantity']
+        quantity = int(data['quantity'])
         download_qr = data['downloadQR']
         download_doc = data['downloadDOC']
-        if data is None:
-            return Response({'error': 'No data provided'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        owner_id = utils.check_existing_owner(owner_name)
-        if not owner_id:
-            return Response({"message": "Человек не найден"})
 
-        item_id = utils.check_existing_item(item_name)
+        if data is None:
+            message = "Данные не получены"
+            return Response({'error': message}, status=status.HTTP_400_BAD_REQUEST)
+        
+        full_name, city = owner_name.split('-') 
+        name_parts = full_name.split()
+
+        if len(name_parts) == 2:
+            last_name, first_name  = name_parts
+            middle_name = None
+        elif len(name_parts) == 3:
+            last_name, first_name, middle_name = name_parts
+        else:
+            message = "Некорректный формат ФИО"
+            return Response({'error': message})
+
+        city_id = utils.check_existing_city(city)
+        owner_id = utils.check_person_existing(last_name, first_name, middle_name, city_id)
+
+        if not owner_id:
+            message = "Человек не найден"
+            return Response({"error": message})
+
+        item = item_name.split('(')
+        if len(item) > 1:
+            name = item[0].strip()
+            brand = item[1].rstrip(')').strip()
+        else:
+            name = item_name.strip()
+            brand = None
+
+        item_id = utils.check_existing_item(name, brand)
         if not item_id:
-            return Response({"message": "Вещь не найдена"})
+            message = "Вещь не найдена"
+            return Response({"error": message })
 
         request.data['owner'] = owner_id
         request.data['item'] = item_id
 
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        records = []
+        for _ in range(quantity):
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            records.append(serializer.save())
 
-        created_record = serializer.save()
+        for created_record in records:
+            qr_data = utils.generate_qr_code(created_record.id)
+            if qr_data is None:
+                message = "Не удалось создать QR-код"
+                return Response({"error": message })
 
-        qr_data = utils.generate_qr_code(created_record.id)
-        if qr_data is None:
-            return Response({"message": "Не удалось создать qr"})
-
-        created_record.qr_code.save(f'qr_code_{created_record.id}.png', BytesIO(qr_data), save=True)
+            created_record.qr_code.save(f'qr_code_{created_record.id}.png', BytesIO(qr_data), save=True)
 
         if download_qr:
             qr_file_path = created_record.qr_code.path
@@ -238,7 +242,6 @@ class OwnerShipRecordCountView(generics.RetrieveAPIView):
         if city_name or item_id:
             queryset = utils.count_items_by_city(city_name, item_id)
         else:
-            # Возвращаем все данные без фильтрации
             queryset = utils.count_items_by_city()
 
         return Response(queryset)

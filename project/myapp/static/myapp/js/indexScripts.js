@@ -43,12 +43,13 @@ async function loadCitiesIntoSelect() {
 }
 
 function searchNames(query) {
-  search(query, 'results', 'home-textinput5', personSearchAPI)
-    .then(results => displayResults(results, 'results', 'home-textinput5'));
+  search(query, personSearchAPI)
+    .then(names => displayResults(names, 'results', 'home-textinput5'))
+    .catch(error => console.error(error))
 }
 
 function searchItems(query) {
-  search(query, 'resultsItems', 'home-textinput6', itemSearchAPI)
+  search(query, itemSearchAPI)
     .then(results => displayResults(results, 'resultsItems', 'home-textinput6'));
 }
 

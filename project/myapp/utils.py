@@ -6,23 +6,11 @@ from docx import Document
 from docx.shared import Pt
 from django.db.models import Q
 from django.db.models import Count
+import re
 
+#Persons
 
-def check_existing_owner(full_name_city):
-    full_name, city = full_name_city.split('-') 
-    
-    name_parts = full_name.split()
-    
-    if len(name_parts) == 2:
-        last_name, first_name  = name_parts
-        middle_name = None
-    elif len(name_parts) == 3:
-        last_name, first_name, middle_name = name_parts
-    else:
-        raise ValueError("Некорректный формат ФИО")
-
-    city_id = check_existing_city(city=city)
-
+def check_person_existing(last_name, first_name, middle_name, city_id):
     try:
         person = models.Person.objects.get(
             first_name=first_name,
@@ -32,42 +20,59 @@ def check_existing_owner(full_name_city):
         )
         return person.id
     except models.Person.DoesNotExist:
-        message = "Человек не найден"
-        return message
+        return None
+
+def search_persons(search_query):
+        search_terms = re.split(r'\s+', search_query)
+
+        q_filter = Q()
+
+        if search_terms:
+            q_filter |= Q(last_name__icontains=search_terms[0])
+
+        if len(search_terms) > 1:
+            q_filter |= Q(first_name__icontains=search_terms[1])
+
+        if len(search_terms) > 2:
+            q_filter |= Q(middle_name__icontains=' '.join(search_terms[2:]))
+
+        q_filter |= (
+            Q(last_name__icontains=search_query) |
+            Q(first_name__icontains=search_query) |
+            Q(middle_name__icontains=search_query)
+        )
+
+        queryset = models.Person.objects.filter(q_filter)
+
+        return queryset
+
+#city
+def search_city(search_query):
+    queryset = models.City.objects.filter(
+        Q(name__icontains=search_query)
+    )
+
+    return queryset
+
+#Item
+def search_items(search_query):
+    queryset = models.Item.objects.filter(
+        Q(name__icontains=search_query) | Q(brand__icontains=search_query)
+    )
+
+    return queryset
 
 def check_existing_city(city):
     city_obj = get_object_or_404(models.City, name=city)
     return city_obj.id
 
-def check_existing_item(item_name):
-    parts = item_name.split('(')
-    
-    if len(parts) > 1:
-        name = parts[0].strip()
-        brand = parts[1].rstrip(')').strip()
-    else:
-        name = item_name.strip()
-        brand = None
-
+def check_existing_item(name, brand):
     try:
-        # Ищем вещь по названию и бренду
         item = models.Item.objects.get(name=name, brand=brand)
         return item.id
     except models.Item.DoesNotExist:
         return None
-    
-def check_existing_record(serializer):
-    owner_id = serializer.validated_data['owner']
-    item_id = serializer.validated_data['item']
-    serial_number = serializer.validated_data.get('serial_number', '')
 
-    existing_record = models.Ownership.objects.filter(
-        owner_id=owner_id,
-        item_id=item_id,
-        serial_number=serial_number,
-    ).first()
-
-    return existing_record is not None
 
 def generate_qr_code(ownership_id):
     url = f"http://192.168.11.129:8000/record_detail/{ownership_id}/"
@@ -81,43 +86,11 @@ def generate_qr_code(ownership_id):
     qr.make(fit=True)
     img = qr.make_image(fill_color="black", back_color="white")
 
-    # Преобразование изображения в байты
     img_byte_array = BytesIO()
     img.save(img_byte_array)
     img_bytes = img_byte_array.getvalue()
 
     return img_bytes
-
-def create_document(owner_name, item_name, serial_number, date):
-    # Создаем новый документ
-    doc = Document()
-
-    # Добавляем заголовок
-    title = doc.add_paragraph('Заявление')
-    title.alignment = 1  # Выравнивание по центру
-
-    # Добавляем информацию о вещи и владельце
-    info = doc.add_paragraph(f'Выдается Вещь({item_name}) ({serial_number}) такому-то человеку({owner_name}).')
-
-    # Добавляем дату
-    date_paragraph = doc.add_paragraph(f'Дата: {date.strftime("%Y-%m-%d")}')
-    
-    # Добавляем место для подписи
-    signature_line = doc.add_paragraph('_______________________')
-    signature_line.alignment = 1  # Выравнивание по центру
-
-    # Устанавливаем размер шрифта для всего документа
-    for paragraph in doc.paragraphs:
-        for run in paragraph.runs:
-            font = run.font
-            font.size = Pt(12)
-
-    # Создаем объект BytesIO для хранения данных документа
-    doc_buffer = BytesIO()
-    doc.save(doc_buffer)
-    doc_buffer.seek(0)
-
-    return doc_buffer
 
 def filter_ownership_data(person_id, item_id, added_date, city_name):
     filters = Q()

@@ -1,5 +1,5 @@
 import * as ScriptsAPI from './ScriptsAPI.js';
-import { displayResults } from './general.js';
+import { displayResults} from './general.js';
 
 
 var personSearchAPI = 'http://127.0.0.1:8000/api/person/search/';
@@ -56,15 +56,20 @@ export function displayDataInTable(data) {
   });
 }
 
-function searchItems(query) {
-    search(query, 'resultsItems', 'home-textinput1', itemSearchAPI)
-    .then(results => displayResults(results, 'resultsItems', 'home-textinput1'));
+
+document.addEventListener("click", event => {
+  const resultsContainer = document.getElementById("resultsCities");
+  if (!resultsContainer.contains(event.target)) {
+    resultsContainer.innerHTML = "";
+  }
+});
+
+itemSearchAPI = "http://127.0.0.1:8000/api/city/search/";
+
+export function searchCities(query){
+  search(query, itemSearchAPI)
+    .then(results => displayResults(results, 'resultsCities', 'home-textinput'));
 }
 
-export function me (){
-  console.log(2)
-}
-
-window.me = me;
-window.searchItems = searchItems;
 window.OwnerShipRecordCount = OwnerShipRecordCount;
+window.searchCities = searchCities;

@@ -22,6 +22,7 @@ urlpatterns = [
             path('swagger/schema/', shema_view.with_ui('swagger', cache_timeout=0)),
 
             path('city/', views.CityListView.as_view(), name='city-list'),
+            path('city/search/<str:search_query>/', views.CitySearchView.as_view(), name='city-search'),
 
             path('person/create/', views.PersonCreateView.as_view(), name='person-create'),
             path('person/', views.PersonListView.as_view(), name='person-list'),

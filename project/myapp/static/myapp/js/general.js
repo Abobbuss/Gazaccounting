@@ -19,10 +19,14 @@ export function displayResults(results, resultsId, textInputClass) {
         }
 
         li.addEventListener('click', function() {
-        document.querySelector(`.${textInputClass}`).value = li.textContent;
-        resultsList.innerHTML = '';
-        });
+          document.querySelector(`.${textInputClass}`).value = li.textContent;
+          resultsList.innerHTML = '';
+          console.log('ResultsList closed.');
+      });
 
         resultsList.appendChild(li);
     });
 }
+  
+
+  
