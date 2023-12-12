@@ -10,11 +10,157 @@
     <meta charset="utf-8" />
     <meta property="twitter:card" content="summary_large_image" />
 
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/index.css' %}?version=137">
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/index.css' %}?version=139">
     <script type="module" src="{% static 'myapp/js/indexScripts.js' %}?version=172"></script>
     <script type="module" src="{% static 'myapp/js/ScriptsAPI.js' %}?version=162"></script>
   </head>
   <body>
+    <div>
+      <div class="home-container">
+        <div data-role="Header" class="home-navbar-container">
+          <div class="home-navbar">
+            <div class="home-container1">
+              <img src="../../static/myapp/img/gaz_icon.png" alt="image" class="home-image" />
+              <span class="home-heading Card-Heading">Складотека</span>
+            </div>
+            <div class="home-links-container">
+              <span class="home-link Navbar-Link">Учет</span>
+              <span class="home-link1 Navbar-Link">Отчет</span>
+              <span class="home-link2 Navbar-Link">Контакты</span>
+            </div>
+          </div>
+        </div>
+        <div class="home-container2"></div>
+        <div class="home-container3">
+          <div class="home-pricing">
+            <div class="home-pricing-card-container">
+              <div class="home-card">
+                <div class="home-card-heading">
+                  <span class="home-price Section-Heading">
+                    Добавить Сотрудника
+                  </span>
+                </div>
+                <div class="home-card-content">
+                  <input
+                    type="text"
+                    placeholder="Фамилия"
+                    class="home-textinput input"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Имя"
+                    class="home-textinput1 input"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Отчество"
+                    class="home-textinput2 input"
+                  />
+                  <select class="home-select">
+                    <option value="Option 1" selected="">Option 1</option>
+                    <option value="New Option">New Option</option>
+                    <option value="New Option">New Option</option>
+                  </select>
+                  <button class="home-choose Anchor button">Внести</button>
+                </div>
+              </div>
+              <div class="home-card1">
+                <div class="home-card-heading1">
+                  <span class="home-price1 Section-Heading">
+                    <span>Добавить</span>
+                    <br />
+                    <span>ТМЦ</span>
+                  </span>
+                </div>
+                <div class="home-card-content1">
+                  <input
+                    type="text"
+                    placeholder="Название"
+                    class="home-textinput3 input"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Марка"
+                    class="home-textinput4 input"
+                  />
+                  <button class="home-choose1 Anchor button">Внести</button>
+                </div>
+              </div>
+              <div class="home-card2">
+                <div class="home-card-heading2">
+                  <span class="home-price2 Section-Heading">
+                    Учет
+                    </br>
+                    Материалов
+                  </span>
+                </div>
+                <div class="home-card-content2">
+                  <div class="home-container4">
+                    <input
+                      type="text"
+                      placeholder="ФИО/Отдел"
+                      class="home-textinput5 input"
+                    />
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="ТМЦ"
+                    class="home-textinput6 input"
+                  />
+                  <div class="home-container5">
+                    <input
+                      type="text"
+                      placeholder="S/N"
+                      class="home-textinput7 input"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Кол-во"
+                      class="home-textinput8 input"
+                    />
+                  </div>
+                  <div class="home-container6">
+                    <div class="home-container7">
+                      <input
+                        type="checkbox"
+                        checked="true"
+                        class="home-checkbox"
+                      />
+                      <span class="home-text3">QR</span>
+                    </div>
+                    <div class="home-container8">
+                      <input
+                        type="checkbox"
+                        checked="true"
+                        class="home-checkbox1"
+                      />
+                      <span class="home-text4">Документ</span>
+                    </div>
+                  </div>
+                  <button class="home-choose2 Anchor button">Внести</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="home-footer-container">
+          <div class="home-footer">
+            <div class="home-copyright-container">
+              <svg viewBox="0 0 1024 1024" class="home-icon">
+                <path
+                  d="M512 854q140 0 241-101t101-241-101-241-241-101-241 101-101 241 101 241 241 101zM512 86q176 0 301 125t125 301-125 301-301 125-301-125-125-301 125-301 301-125zM506 390q-80 0-80 116v12q0 116 80 116 30 0 50-17t20-43h76q0 50-44 88-42 36-102 36-80 0-122-48t-42-132v-12q0-82 40-128 48-54 124-54 66 0 104 38 42 42 42 98h-76q0-14-6-26-10-20-14-24-20-20-50-20z"
+                ></path>
+              </svg>
+              <span class="home-link3 Anchor">
+                Филиал ООО "Газпром Инвест Томск"
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <!-- <body>
     <div>
       <div class="home-container">
         <div data-role="Header" class="home-navbar-container">
@@ -140,5 +286,5 @@
         </div>
       </div>
     </div>
-  </body>
+  </body> -->
 </html>
