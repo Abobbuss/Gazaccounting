@@ -101,7 +101,7 @@
   text-decoration: none;
 }
 .Card-Heading {
-  font-size: 24px;
+  font-size: 32px;
   font-style: normal;
   font-family: Overpass;
   font-weight: 700;
@@ -118,7 +118,7 @@
   text-decoration: none;
 }
 .Navbar-Link {
-  font-size: 24px;
+  font-size: 32px;
   font-family: Overpass;
   font-weight: 700;
   line-height: 1.55;

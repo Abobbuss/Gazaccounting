@@ -10,9 +10,10 @@
     <meta charset="utf-8" />
     <meta property="twitter:card" content="summary_large_image" />
 
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/index.css' %}?version=139">
-    <script type="module" src="{% static 'myapp/js/indexScripts.js' %}?version=172"></script>
-    <script type="module" src="{% static 'myapp/js/ScriptsAPI.js' %}?version=162"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/index.css' %}?version=140">
+    <script type="module" src="{% static 'myapp/js/indexScripts.js' %}?version=180"></script>
+    <script type="module" src="{% static 'myapp/js/ScriptsAPI.js' %}?version=170"></script>
+    <script type="module" src="{% static 'myapp/js/trash.js' %}?version=170"></script>
   </head>
   <body>
     <div>
@@ -45,23 +46,24 @@
                     type="text"
                     placeholder="Фамилия"
                     class="home-textinput input"
+                    id = "last-name"
                   />
                   <input
                     type="text"
                     placeholder="Имя"
                     class="home-textinput1 input"
+                    id = "first-name"
                   />
                   <input
                     type="text"
                     placeholder="Отчество"
                     class="home-textinput2 input"
+                    id = "middle-name"
                   />
-                  <select class="home-select">
-                    <option value="Option 1" selected="">Option 1</option>
-                    <option value="New Option">New Option</option>
-                    <option value="New Option">New Option</option>
+                  <select id="citySelect" class="home-select">
+                    <option value="Option 1" selected=""></option>
                   </select>
-                  <button class="home-choose Anchor button">Внести</button>
+                  <button class="home-choose Anchor button" onclick="atlas()">Внести</button>
                 </div>
               </div>
               <div class="home-card1">

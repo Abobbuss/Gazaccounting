@@ -1,5 +1,6 @@
-import * as ScriptsAPI from './ScriptsAPI.js';
+import * as ScriptsAPI  from './ScriptsAPI.js';
 import { displayResults } from './general.js';
+
 
 
 var personSearchAPI = 'http://127.0.0.1:8000/api/person/search/';
@@ -9,8 +10,8 @@ document.addEventListener('DOMContentLoaded', function() {
   loadCitiesIntoSelect();
 });
 
-document.addEventListener('mousedown', closeDropdown('home-textinput5'));
-document.addEventListener('mousedown', closeDropdown('home-textinput6')); 
+// document.addEventListener('mousedown', closeDropdown('home-textinput5'));
+// document.addEventListener('mousedown', closeDropdown('home-textinput6')); 
 
 function closeDropdown(targetClass) {
   return function(event) {
@@ -31,6 +32,7 @@ async function loadCitiesIntoSelect() {
 
   try {
       const cities = await ScriptsAPI.getFetchCities();
+      // console.log(cities)
       cities.forEach(city => {
           const option = document.createElement('option');
           option.value = city.name;
@@ -52,6 +54,20 @@ function searchItems(query) {
   search(query, itemSearchAPI)
     .then(results => displayResults(results, 'resultsItems', 'home-textinput6'));
 }
+
+// const lastName = document.getElementById('last-name').value;
+// const firstName = document.getElementById('first-name').value;
+// const middleName = document.getElementById('middle-name').value;
+// const cityId = document.getElementById('citySelect').value;
+
+// ScriptsAPI.postPerson(lastName, firstName, middleName, cityId)
+function postAddPerson() {
+  var x = 2
+
+  return x
+} 
+
+export default postAddPerson;
 
 window.searchNames = searchNames;
 window.searchItems = searchItems;

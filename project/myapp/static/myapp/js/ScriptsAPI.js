@@ -17,27 +17,33 @@ export function fetchCsrfToken() {
     }
 }
 
-export async function getFetchCities() {
-    try {
-        const response = await fetch(getCitiesAPI);
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error('Error fetching cities:', error);
-        throw error;
-    }
+// export async function getFetchCities() {
+//     try {
+//         const response = await fetch(getCitiesAPI);
+//         const data = await response.json();
+//         return data;
+//     } catch (error) {
+//         console.error('Error fetching cities:', error);
+//         throw error;
+//     }
+// }
+
+export async function get(){
+  try {
+    const a = await 2;
+    console.log(a);
+    return a;
+  }catch(error){
+    console.log(error)
+  }
 }
 
-function postAddPerson() {
-  const lastName = document.getElementById('last-name').value;
-  const firstName = document.getElementById('first-name').value;
-  const middleName = document.getElementById('middle-name').value;
-  const cityId = document.getElementById('citySelect').value;
+export function postPerson(last_name, first_name, middle_name, cityId) {
 
   const data = {
-    last_name: lastName,
-    first_name: firstName,
-    middle_name: middleName,
+    last_name: last_name,
+    first_name: first_name,
+    middle_name: middle_name,
     city: cityId,
   };
 
@@ -290,9 +296,10 @@ export async function getOwnerShipRecordCount(city, item) {
 }
 
 
+
 window.postAddItem = postAddItem;
-window.postAddPerson = postAddPerson;
 window.postAddOwnerShip = postAddOwnerShip;
 window.search = search;
 window.getOwnerShipDetails = getOwnerShipDetails;
 window.getOwnerShipRecordCount = getOwnerShipRecordCount;
+
