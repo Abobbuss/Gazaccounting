@@ -141,35 +141,49 @@ class OwnerShipCreateView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         data = request.data
-        owner_name = data['owner']['name']
+        owner_department_name = data['owner_department']['name']
         item_name = data['item']['name']
         serial_number = data['serial_number']
         quantity = int(data['quantity'])
         download_qr = data['downloadQR']
         download_doc = data['downloadDOC']
 
+        return Response({"error": "message"})
+
         if data is None:
             message = "Данные не получены"
             return Response({'error': message}, status=status.HTTP_400_BAD_REQUEST)
-        
-        full_name, city = owner_name.split('-') 
-        name_parts = full_name.split()
 
-        if len(name_parts) == 2:
-            last_name, first_name  = name_parts
-            middle_name = None
-        elif len(name_parts) == 3:
-            last_name, first_name, middle_name = name_parts
-        else:
-            message = "Некорректный формат ФИО"
-            return Response({'error': message})
-
+        full_name, city = owner_department_name.split('-')
         city_id = utils.check_existing_city(city)
-        owner_id = utils.check_person_existing(last_name, first_name, middle_name, city_id)
+        if not city_id:
+            message = "Город не найден"
+            return Response({'error': message}, status=status.HTTP_400_BAD_REQUEST)
+        
+        department_id = utils.check_existing_department(full_name, city_id)
+        owner_id = None
 
-        if not owner_id:
-            message = "Человек не найден"
+        if not department_id:
+            name_parts = full_name.split()
+
+            if len(name_parts) == 2:
+                last_name, first_name = name_parts
+                middle_name = None
+            elif len(name_parts) == 3:
+                last_name, first_name, middle_name = name_parts
+
+            owner_id = utils.check_existing_person(last_name, first_name, middle_name, city_id)
+
+        if owner_id or department_id:
+            data.pop('owner_department')
+        else:
+            message = "Человек или отдел не найден"
             return Response({"error": message})
+
+        if department_id:
+            data['department'] = department_id
+        elif owner_id:
+            data['owner'] = owner_id
 
         item = item_name.split('(')
         if len(item) > 1:
@@ -183,9 +197,8 @@ class OwnerShipCreateView(generics.CreateAPIView):
         if not item_id:
             message = "Вещь не найдена"
             return Response({"error": message })
-
-        request.data['owner'] = owner_id
-        request.data['item'] = item_id
+        else:
+            request.data['item'] = item_id
 
         records = []
         for _ in range(quantity):

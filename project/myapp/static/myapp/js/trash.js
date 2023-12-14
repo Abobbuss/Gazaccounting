@@ -1,10 +1,7 @@
 import * as ScriptsAPI  from './ScriptsAPI.js';
 
 
-export function atlas(){
-    const value = ScriptsAPI.get()
+export function me(){
+  console.log(2);
+};
 
-    
-}
-
-window.atlas = atlas;

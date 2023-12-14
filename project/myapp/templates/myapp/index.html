@@ -11,9 +11,9 @@
     <meta property="twitter:card" content="summary_large_image" />
 
     <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/index.css' %}?version=140">
-    <script type="module" src="{% static 'myapp/js/indexScripts.js' %}?version=180"></script>
-    <script type="module" src="{% static 'myapp/js/ScriptsAPI.js' %}?version=170"></script>
-    <script type="module" src="{% static 'myapp/js/trash.js' %}?version=170"></script>
+    <script type="module" src="{% static 'myapp/js/indexScripts.js' %}?nocache=196"></script>
+    <script type="module" src="{% static 'myapp/js/ScriptsAPI.js' %}?nocache=183"></script>
+    <script type="module" src="{% static 'myapp/js/trash.js' %}?nocache=182"></script>
   </head>
   <body>
     <div>
@@ -63,7 +63,10 @@
                   <select id="citySelect" class="home-select">
                     <option value="Option 1" selected=""></option>
                   </select>
-                  <button class="home-choose Anchor button" onclick="atlas()">Внести</button>
+                  <button class="home-choose Anchor button" id="postAddPersonButton">Внести</button>
+                  <script type="module">
+
+                </script>
                 </div>
               </div>
               <div class="home-card1">
@@ -79,13 +82,15 @@
                     type="text"
                     placeholder="Название"
                     class="home-textinput3 input"
+                    id="itemName"
                   />
                   <input
                     type="text"
                     placeholder="Марка"
                     class="home-textinput4 input"
+                    id="itemBrand"
                   />
-                  <button class="home-choose1 Anchor button">Внести</button>
+                  <button class="home-choose1 Anchor button" id="postAddItemButton">Внести</button>
                 </div>
               </div>
               <div class="home-card2">
@@ -127,6 +132,7 @@
                         type="checkbox"
                         checked="true"
                         class="home-checkbox"
+                        id="checkbox_dowloadQR"
                       />
                       <span class="home-text3">QR</span>
                     </div>
@@ -135,11 +141,12 @@
                         type="checkbox"
                         checked="true"
                         class="home-checkbox1"
+                        id="checkbox_dowloadDOC"
                       />
                       <span class="home-text4">Документ</span>
                     </div>
                   </div>
-                  <button class="home-choose2 Anchor button">Внести</button>
+                  <button class="home-choose2 Anchor button" id="postAddOwnerShipButton">Внести</button>
                 </div>
               </div>
             </div>

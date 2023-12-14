@@ -8,9 +8,9 @@ from django.db.models import Q
 from django.db.models import Count
 import re
 
-#Persons
 
-def check_person_existing(last_name, first_name, middle_name, city_id):
+#Persons
+def check_existing_person(last_name, first_name, middle_name, city_id):
     try:
         person = models.Person.objects.get(
             first_name=first_name,
@@ -46,13 +46,20 @@ def search_persons(search_query):
 
         return queryset
 
-#city
+#City
 def search_city(search_query):
     queryset = models.City.objects.filter(
         Q(name__icontains=search_query)
     )
 
     return queryset
+
+def check_existing_city(city_name):
+    try:
+        city = models.City.objects.get(name=city_name)
+        return city.id
+    except models.City.DoesNotExist:
+        return None
 
 #Item
 def search_items(search_query):
@@ -62,10 +69,6 @@ def search_items(search_query):
 
     return queryset
 
-def check_existing_city(city):
-    city_obj = get_object_or_404(models.City, name=city)
-    return city_obj.id
-
 def check_existing_item(name, brand):
     try:
         item = models.Item.objects.get(name=name, brand=brand)
@@ -73,6 +76,13 @@ def check_existing_item(name, brand):
     except models.Item.DoesNotExist:
         return None
 
+#Departmens
+def check_existing_department(department_name, city_id):
+    try:
+        department = models.Department.objects.get(name=department_name, city=city_id)
+        return department.id
+    except models.Department.DoesNotExist:
+        return None
 
 def generate_qr_code(ownership_id):
     url = f"http://192.168.11.129:8000/record_detail/{ownership_id}/"
