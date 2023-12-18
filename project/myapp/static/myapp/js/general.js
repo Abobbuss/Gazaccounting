@@ -28,5 +28,40 @@ export function displayResults(results, resultsId, textInputClass) {
     });
 }
   
+export function updateDropdown(results, dropdownId, textInputId) {
+    const dropdown = document.getElementById(dropdownId);
+    const ul = dropdown.querySelector('ul');
+
+    ul.innerHTML = '';
+
+    results.forEach(result => {
+        const li = document.createElement('li');
+
+        let displayString;
+        if (result.brand) {
+            displayString = `${result.name} (${result.brand})`;
+        } else if (result.first_name) {
+            const firstName = result.first_name;
+            const lastName = result.last_name || '';
+            const middleName = result.middle_name || '';
+            const city = result.city || '' 
+        
+            displayString = `${lastName} ${firstName} ${middleName}-${city} `.trim();
+        } else {
+            displayString = result.name;
+        }
+
+        li.textContent = displayString;
+
+        ul.appendChild(li);
+
+        li.addEventListener('click', () => {
+            document.getElementById(textInputId).value = displayString;
+            dropdown.style.display = 'none';
+        });
+    });
+
+    dropdown.style.display = 'block';
+}
 
   

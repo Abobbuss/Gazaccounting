@@ -33,8 +33,8 @@ class Department(models.Model):
         return f"{self.name} - {self.city}"
 
 class Ownership(models.Model):
-    owner = models.OneToOneField(Person, on_delete=models.CASCADE, null=True, blank=True)
-    department = models.OneToOneField(Department, on_delete=models.CASCADE, null=True, blank=True)
+    owner = models.ForeignKey(Person, on_delete=models.CASCADE, null=True, blank=True)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True, blank=True)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     serial_number = models.CharField(max_length=255, blank=True, null=True)
     added_date = models.DateTimeField(auto_now_add=True)
@@ -46,5 +46,9 @@ class Ownership(models.Model):
 
     def __str__(self):
         return f"{self.owner or self.department} - {self.item}"
+
+
     
+
+
 

@@ -366,6 +366,18 @@ html, body {
   align-items: flex-start;
   margin-bottom: var(--dl-space-space-doubleunit);
   justify-content: space-between;
+  position: relative;
+}
+.home-container4a {
+  flex: 0 0 auto;
+  width: 80%;
+  height: auto;
+  display: flex;
+  margin-top: var(--dl-space-space-doubleunit);
+  align-items: flex-start;
+  margin-bottom: var(--dl-space-space-doubleunit);
+  justify-content: space-between;
+  position: relative;
 }
 .home-textinput5 {
   width: 100%;
@@ -374,14 +386,39 @@ html, body {
   align-self: center;
   text-align: center;
 }
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 150px;
+  overflow-y: auto;
+  display: none; 
+  border: 1px solid #ccc;
+  z-index: 1000;
+}
+.dropdown ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background-color: white;
+}
+.dropdown li {
+  padding: 8px;
+  cursor: pointer;
+}
+.dropdown li:hover {
+  background-color: #f8f2f2;
+}
+.home-container4:hover .dropdown {
+  display: block;
+}
 .home-textinput6 {
-  width: 80%;
+  width: 100%;
   height: auto;
   font-size: 24px;
   align-self: center;
-  margin-top: var(--dl-space-space-doubleunit);
   text-align: center;
-  margin-bottom: var(--dl-space-space-doubleunit);
 }
 .home-container5 {
   flex: 0 0 auto;

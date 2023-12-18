@@ -10,10 +10,10 @@
     <meta charset="utf-8" />
     <meta property="twitter:card" content="summary_large_image" />
 
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/index.css' %}?version=140">
-    <script type="module" src="{% static 'myapp/js/indexScripts.js' %}?nocache=196"></script>
-    <script type="module" src="{% static 'myapp/js/ScriptsAPI.js' %}?nocache=183"></script>
-    <script type="module" src="{% static 'myapp/js/trash.js' %}?nocache=182"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/index.css' %}?version=142">
+    <script type="module" src="{% static 'myapp/js/indexScripts.js' %}?nocache=198"></script>
+    <script type="module" src="{% static 'myapp/js/ScriptsAPI.js' %}?nocache=185"></script>
+    <script type="module" src="{% static 'myapp/js/trash.js' %}?nocache=184"></script>
   </head>
   <body>
     <div>
@@ -107,13 +107,25 @@
                       type="text"
                       placeholder="ФИО/Отдел"
                       class="home-textinput5 input"
+                      id=home-textinput5
                     />
+                    <div class="dropdown" id="dropdown1">
+                      <ul>
+                      </ul>
+                    </div>
                   </div>
-                  <input
+                  <div class="home-container4a">
+                    <input
                     type="text"
                     placeholder="ТМЦ"
                     class="home-textinput6 input"
-                  />
+                    id="home-textinput6"
+                    />
+                    <div class="dropdown" id="dropdown2">
+                      <ul>
+                      </ul>
+                    </div>
+                  </div>
                   <div class="home-container5">
                     <input
                       type="text"

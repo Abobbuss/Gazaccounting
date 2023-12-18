@@ -49,7 +49,7 @@ class PersonCreateView(generics.CreateAPIView):
 
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
-            return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': serializer.errors})
         else:
             serializer.save()
 
@@ -147,18 +147,17 @@ class OwnerShipCreateView(generics.CreateAPIView):
         quantity = int(data['quantity'])
         download_qr = data['downloadQR']
         download_doc = data['downloadDOC']
-
-        return Response({"error": "message"})
-
+        
         if data is None:
             message = "Данные не получены"
-            return Response({'error': message}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': message})
 
         full_name, city = owner_department_name.split('-')
+        print(city)
         city_id = utils.check_existing_city(city)
         if not city_id:
             message = "Город не найден"
-            return Response({'error': message}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': message})
         
         department_id = utils.check_existing_department(full_name, city_id)
         owner_id = None
@@ -184,7 +183,7 @@ class OwnerShipCreateView(generics.CreateAPIView):
             data['department'] = department_id
         elif owner_id:
             data['owner'] = owner_id
-
+        
         item = item_name.split('(')
         if len(item) > 1:
             name = item[0].strip()
@@ -199,12 +198,15 @@ class OwnerShipCreateView(generics.CreateAPIView):
             return Response({"error": message })
         else:
             request.data['item'] = item_id
-
+        print(data)
         records = []
-        for _ in range(quantity):
-            serializer = self.get_serializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            records.append(serializer.save())
+        try:
+            for _ in range(quantity):
+                serializer = self.get_serializer(data=request.data)
+                serializer.is_valid(raise_exception=True)
+                records.append(serializer.save())
+        except Exception as e:
+            return Response({'error': str(e)})
 
         for created_record in records:
             qr_data = utils.generate_qr_code(created_record.id)
@@ -216,6 +218,7 @@ class OwnerShipCreateView(generics.CreateAPIView):
 
         if download_qr:
             qr_file_path = created_record.qr_code.path
+            print(qr_file_path)
             return FileResponse(open(qr_file_path, 'rb'), content_type='image/png', as_attachment=True)
         
         if download_doc:

@@ -1,5 +1,5 @@
 import * as ScriptsAPI  from './ScriptsAPI.js';
-import { displayResults } from './general.js';
+import { updateDropdown } from './general.js';
 
 var personSearchAPI = 'http://127.0.0.1:8000/api/person/search/';
 var itemSearchAPI = 'http://127.0.0.1:8000/api/item/search/';
@@ -7,6 +7,18 @@ var itemSearchAPI = 'http://127.0.0.1:8000/api/item/search/';
 
 document.addEventListener('DOMContentLoaded', function() {
   loadCitiesIntoSelect();
+});
+document.addEventListener('click', function (event) {
+  const dropdown = document.getElementById('dropdown1');
+  if (!event.target.closest('.home-container4')) {
+      dropdown.style.display = 'none';
+  }
+});
+document.addEventListener('click', function (event) {
+  const dropdown = document.getElementById('dropdown2');
+  if (!event.target.closest('.home-container4')) {
+      dropdown.style.display = 'none';
+  }
 });
 
 document.getElementById('postAddPersonButton').addEventListener('click', function() {
@@ -18,9 +30,6 @@ document.getElementById('postAddItemButton').addEventListener('click', function(
 document.getElementById('postAddOwnerShipButton').addEventListener('click', function() {
   postAddOwnerShip();
 });
-
-// document.addEventListener('mousedown', closeDropdown('home-textinput5'));
-// document.addEventListener('mousedown', closeDropdown('home-textinput6')); 
 
 async function loadCitiesIntoSelect() {
   const citySelect = document.getElementById('citySelect');
@@ -64,6 +73,22 @@ function postAddOwnerShip(){
 
   ScriptsAPI.postAddOwnerShip(ownerDepartmentName, itemName, serial_number, quantity, downloadQR, downloadDOC)
 }
+
+document.getElementById('home-textinput5').addEventListener('input', function () {
+  const query = this.value;
+
+  ScriptsAPI.search(query, personSearchAPI)
+      .then(results => updateDropdown(results, "dropdown1", "home-textinput5"))
+      .catch(error => console.error(error));
+});
+
+document.getElementById('home-textinput6').addEventListener('input', function () {
+  const query = this.value;
+
+  ScriptsAPI.search(query, itemSearchAPI)
+      .then(results => updateDropdown(results, "dropdown2", "home-textinput6"))
+      .catch(error => console.error(error));
+});
 
 // function closeDropdown(targetClass) {
 //   return function(event) {

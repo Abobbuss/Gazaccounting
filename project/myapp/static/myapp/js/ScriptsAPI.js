@@ -145,93 +145,59 @@ export function postAddOwnerShip(ownerDepartmentName, itemName, serial_number, q
       },
       body: JSON.stringify(data)
   })
-  // .then(response => {
-  //     if (downloadQR) {
-  //         return response.blob();
-  //     } else {
-  //         return null;
-  //     }
-  // })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return response.json();
+  })
   .then(data => {
-    // Обработка успешного ответа
-    // console.log(data);
+    console.log(2);
+    console.log(data);
 
-    // Здесь можно добавить логику для обработки данных или открытия ссылок
-    if (downloadQR) {
-        // ...
+    if (downloadQR && data.qr_file_path) {
+      console.log(2);
+      // Создаем URL для скачивания QR-кода
+      const downloadUrl = `/download-qr?path=${encodeURIComponent(data.qr_file_path)}`;
+
+      // Создаем ссылку и эмулируем клик для скачивания файла
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.setAttribute('download', 'qr_code.png');
+      link.click();
     }
+  })
+  .catch((error) => {
+    const errorText = error.response ? error.response.text() : undefined;
 
-    if (downloadDOC) {
-        // ...
-    }
-})
-  // .then(blob => {
-  //     if (blob !== null) {
-  //         const urlQR = window.URL.createObjectURL(blob);
-
-  //         const aQR = document.createElement('a');
-  //         aQR.href = urlQR;
-  //         aQR.download = 'qr_code.png';  
-  //         document.body.appendChild(aQR);
-
-  //         aQR.click();
-
-  //         document.body.removeChild(aQR);
-
-  //         window.URL.revokeObjectURL(urlQR);
-  //     };
-
-  //     if (downloadDOC) {
-  //         return fetch(postAddOwnerShipAPI, {
-  //             method: 'POST',
-  //             headers: {
-  //                 'Content-Type': 'application/json',
-  //                 'X-CSRFToken': csrfTokenMatch
-  //             },
-  //             body: JSON.stringify({ downloadDOC: true })
-  //         });
-  //     } else {
-  //         return null;
-  //     };
-  // })
-  // .then(responseDoc => {
-  //     if (responseDoc !== null) {
-  //         return responseDoc.blob();
-  //     } else {
-  //         return null;
-  //     }
-  // })
-  // .then(blobDoc => {
-  //     if (blobDoc !== null) {
-  //         const urlDoc = window.URL.createObjectURL(blobDoc);
-
-  //         const aDoc = document.createElement('a');
-  //         aDoc.href = urlDoc;
-  //         aDoc.download = 'document.docx';  
-  //         document.body.appendChild(aDoc);
-
-  //         aDoc.click();
-
-  //         document.body.removeChild(aDoc);
-
-  //         window.URL.revokeObjectURL(urlDoc);
-  //     }
-  // })
-  .catch(error => {
-    // Обработка ошибок
-    console.error('Ошибка:', error.message);
-    if (error.response) {
-        // Если есть ответ от сервера, то он в формате JSON
-        return error.response.json().then(serverError => {
-            console.log('Ошибка сервера:', serverError);
-            // Здесь вы можете обработать serverError.error
-        }).catch(parseError => {
-            console.error('Ошибка разбора JSON:', parseError);
-        });
-    }
+    return Promise.resolve(errorText);
   });
 };
 
+export function search(query, searchAPI) {
+  return new Promise((resolve, reject) => {
+    if (!query.trim()) {
+      resolve([]);
+      return;
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          const parsedResults = JSON.parse(xhr.responseText);
+          resolve(parsedResults);
+        } else {
+          reject(new Error(`Failed with status ${xhr.status}`));
+        }
+      }
+    };
+
+    const encodedQuery = encodeURIComponent(query);
+    xhr.open('GET', `${searchAPI}${encodedQuery}`, true);
+    xhr.send();
+  });
+};
 
 
 // function showMessage(message) {
@@ -243,31 +209,7 @@ export function postAddOwnerShip(ownerDepartmentName, itemName, serial_number, q
 
 
 
-// function search(query, searchAPI) {
-//   return new Promise((resolve, reject) => {
-//     if (!query.trim()) {
-//       resolve([]);
-//       return;
-//     }
 
-//     var xhr = new XMLHttpRequest();
-//     xhr.onreadystatechange = function() {
-//       if (xhr.readyState === 4) {
-//         if (xhr.status === 200) {
-//           const parsedResults = JSON.parse(xhr.responseText);
-//           console.log(parsedResults)
-//           resolve(parsedResults);
-//         } else {
-//           reject(new Error(`Failed with status ${xhr.status}`));
-//         }
-//       }
-//     };
-
-//     const encodedQuery = encodeURIComponent(query);
-//     xhr.open('GET', `${searchAPI}${encodedQuery}`, true);
-//     xhr.send();
-//   });
-// };
 
 // export function getOwnerShipDetails(callback, id) {
 
