@@ -27,6 +27,7 @@
   --dl-space-space-fourunits: 32px;
   --dl-space-space-doubleunit: 16px;
   --dl-space-space-tripleunit: 24px;
+  --dl-font-size-text-table: 24px;
 }
 .teleport-show {
   display: flex !important;
