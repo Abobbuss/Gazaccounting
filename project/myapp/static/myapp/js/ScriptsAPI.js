@@ -156,8 +156,6 @@ export function postAddOwnerShip(ownerDepartmentName, itemName, serial_number, q
     console.log(data);
 
     if (downloadQR && data.qr_file_path) {
-      console.log(2);
-      // Создаем URL для скачивания QR-кода
       const downloadUrl = `/download-qr?path=${encodeURIComponent(data.qr_file_path)}`;
 
       // Создаем ссылку и эмулируем клик для скачивания файла
@@ -198,6 +196,35 @@ export function search(query, searchAPI) {
     xhr.send();
   });
 };
+
+export function getOwnerShipAPI(fullName, item, city, sn, apiEndpoint) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          const responseData = JSON.parse(xhr.responseText);
+          resolve(responseData);
+        } else {
+          reject(new Error(`Failed with status ${xhr.status}`));
+        }
+      }
+    };
+
+    const requestData = {
+      full_name: fullName,
+      item: item,
+      city: city,
+      sn: sn,
+    };
+
+    const jsonData = JSON.stringify(requestData);
+
+    xhr.open('POST', apiEndpoint, true);
+    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+    xhr.send(jsonData);
+  });
+}
 
 
 // function showMessage(message) {

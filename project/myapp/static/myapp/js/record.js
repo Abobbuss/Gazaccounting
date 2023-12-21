@@ -1,10 +1,40 @@
 import * as ScriptsAPI from './ScriptsAPI.js';
-import { displayResults} from './general.js';
+import { updateDropdown } from './general.js';
 
 
 var personSearchAPI = 'http://127.0.0.1:8000/api/person/search/';
 var itemSearchAPI = 'http://127.0.0.1:8000/api/item/search/';
 
+
+document.addEventListener('click', function (event) {
+  const dropdown = document.getElementById('dropdown');
+  if (!event.target.closest('.home-container09')) {
+      dropdown.style.display = 'none';
+  }
+});
+
+document.getElementById('full-name').addEventListener('input', function () {
+  const query = this.value;
+
+  ScriptsAPI.search(query, personSearchAPI)
+      .then(results => updateDropdown(results, "dropdown", "full-name"))
+      .catch(error => console.error(error));
+});
+
+document.addEventListener('click', function (event) {
+  const dropdown = document.getElementById('dropdown1');
+  if (!event.target.closest('.home-container10')) {
+      dropdown.style.display = 'none';
+  }
+});
+
+// document.getElementById('item1').addEventListener('input', function () {
+//   const query = this.value;
+
+//   ScriptsAPI.search(query, itemSearchAPI)
+//       .then(results => updateDropdown(results, "dropdown1", "item1"))
+//       .catch(error => console.error(error));
+// });
 
 document.addEventListener('DOMContentLoaded', function() {
   var containerSwitch = document.getElementById('containerSwitch');
@@ -22,29 +52,31 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-document.addEventListener('DOMContentLoaded', OwnerShipRecordCount);
-export function OwnerShipRecordCount() {
-  const cityInput = document.getElementById('city').value;
-  const itemInput = document.getElementById('item').value;
-  console.log(cityInput, itemInput)
 
-  // if (!cityInput || !itemInput) {
-  //   console.error('Не удалось найти один из элементов');
-  //   return;
-  // }
 
-  // const cityValue = cityInput.value || 'None';
-  // const itemValue = itemInput.value || 'None';
+// document.addEventListener('DOMContentLoaded', OwnerShipRecordCount);
+// export function OwnerShipRecordCount() {
+//   const cityInput = document.getElementById('city').value;
+//   const itemInput = document.getElementById('item').value;
+//   console.log(cityInput, itemInput)
 
-  // getOwnerShipRecordCount(cityValue, itemValue)
-  //   .then(data => {
-  //     console.log('Полученные данные:', data);
-  //     displayDataInTable(data);
-  //   })
-  //   .catch(error => {
-  //     console.error('Ошибка получения данных:', error);
-  //   });
-}
+//   if (!cityInput || !itemInput) {
+//     console.error('Не удалось найти один из элементов');
+//     return;
+//   }
+
+//   const cityValue = cityInput.value || 'None';
+//   const itemValue = itemInput.value || 'None';
+
+//   getOwnerShipRecordCount(cityValue, itemValue)
+//     .then(data => {
+//       console.log('Полученные данные:', data);
+//       displayDataInTable(data);
+//     })
+//     .catch(error => {
+//       console.error('Ошибка получения данных:', error);
+//     });
+// }
 
 // export function displayDataInTable(data) {
 //   const tableContainer = document.querySelector('.home-table1');

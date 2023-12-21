@@ -90,31 +90,3 @@ document.getElementById('home-textinput6').addEventListener('input', function ()
       .catch(error => console.error(error));
 });
 
-// function closeDropdown(targetClass) {
-//   return function(event) {
-//     var homeCard = document.querySelector('.home-card2');
-//     var inputField = document.querySelector('.' + targetClass);
-
-//     if (!homeCard.contains(event.target) && event.target !== inputField) {
-//       setTimeout(() => {
-//         document.getElementById('results').innerHTML = '';
-//       }, 0);
-//     }
-//   };
-// };
-
-// function searchNames(query) {
-//   search(query, personSearchAPI)
-//     .then(names => displayResults(names, 'results', 'home-textinput5'))
-//     .catch(error => console.error(error))
-// }
-
-// function searchItems(query) {
-//   search(query, itemSearchAPI)
-//     .then(results => displayResults(results, 'resultsItems', 'home-textinput6'));
-// }
-
-
-
-// window.searchNames = searchNames;
-// window.searchItems = searchItems;

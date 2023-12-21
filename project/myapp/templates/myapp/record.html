@@ -9,11 +9,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta charset="utf-8" />
     
-        <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/record.css' %}?vers2sion=5">
-        <script type="module" src="{% static 'myapp/js/record.js' %}?version=4"></script>
+        <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/record.css' %}?vers2sion=1">
+        <script type="module" src="{% static 'myapp/js/record.js' %}?version=6"></script>
         <!-- <script type="module" src="{% static 'myapp/js/general.js' %}?version=3"></script>
         <script type="module" src="{% static 'myapp/js/ScriptsAPI.js' %}?version=3"></script> -->
     </head>
+
 
     <body>
       <div>
@@ -26,53 +27,95 @@
               </div>
               <div class="home-links-container">
                 <span class="home-link Navbar-Link">Учет</span>
-                <span class="home-link1 Navbar-Link">Отчет</span>
-                <span class="home-link2 Navbar-Link">Контакты</span>
+                <span class="home-link01 Navbar-Link">Отчет</span>
+                <span class="home-link02 Navbar-Link">Контакты</span>
               </div>
             </div>
           </div>
           <div class="home-container02"></div>
           <div class="home-container03">
             <div class="home-container04">
-              <input
-                type="text"
-                placeholder="ПОИСК"
-                class="home-textinput input"
-              />
+              <div class="home-container05">
+                <span class="home-text03">Люди</span>
+                <div class="switch">
+                  <label class="switch">
+                    <input type="checkbox" id="containerSwitch">
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+                <span class="home-text03">Города</span>
+              </div>
               <button type="button" class="home-button button">
-                <span class="home-text">
+                <span class="home-text01">
                   <span>Скачать данные</span>
                   <br />
                 </span>
               </button>
             </div>
-            <div class="home-container05">
-              <span class="home-text03">Статистика по людям</span>
-              <div class="switch">
-                <label class="switch">
-                  <input type="checkbox" id="containerSwitch">
-                  <span class="slider round"></span>
-                </label>
-              </div>
-              <span class="home-text03">Статистика по городам</span>
-            </div>
             <div class="home-container06" id="home-container06">
               <div class="home-container07">
                 <div class="home-container08">
                   <div class="home-container09">
-                    <a href="#INFO" class="home-link3">ФИО</a>
+                    <input
+                    type="text"
+                    placeholder="ФИО"
+                    class="home-textinput2 input"
+                    id = "full-name"
+                    value="ФИО"
+                    />
+                    <div class="dropdown" id="dropdown">
+                      <ul>
+                      </ul>
+                    </div>
                   </div>
                   <div class="home-container10">
-                    <a href="#INFO" class="home-link4">Город</a>
+                    <input
+                    type="text"
+                    placeholder="ТМЦ"
+                    class="home-textinput2 input"
+                    id = "item1"
+                    value="ТМЦ"
+                    />
+                    <div class="dropdown" id="dropdown1">
+                      <ul>
+                        privet
+                      </ul>
+                    </div>
                   </div>
                   <div class="home-container11">
-                    <a href="#INFO" class="home-link5">Вещь</a>
+                    <input
+                    type="text"
+                    placeholder="Город"
+                    class="home-textinput2 input"
+                    id = "city1"
+                    value="Город"
+                    />
+                    <div class="dropdown" id="dropdown2">
+                      <ul>
+                      </ul>
+                    </div>
                   </div>
                   <div class="home-container12">
-                    <span class="home-text04">S/N</span>
+                    <input
+                    type="text"
+                    placeholder="S/N"
+                    class="home-textinput2 input"
+                    id = "SN"
+                    value="S/N"
+                    />
+                    <div class="dropdown" id="dropdown3">
+                      <ul>
+                      </ul>
+                    </div>
                   </div>
                   <div class="home-container13">
-                    <span class="home-text05">QR</span>
+                    <input
+                    type="text"
+                    placeholder="QR"
+                    class="home-textinput2 input"
+                    id = "QR"
+                    value="QR"
+                    />
                   </div>
                 </div>
               </div>
@@ -81,23 +124,13 @@
               <div class="home-container21">
                 <div class="home-container22">
                   <div class="home-container23">
-                    <input
-                    type="text"
-                    placeholder="Город"
-                    class="home-textinput1 input"
-                    id = "city"
-                    />
+                    <span class="home-text08">Город</span>
                   </div>
                   <div class="home-container24">
-                    <input
-                    type="text"
-                    placeholder="Вещь"
-                    class="home-textinput1 input"
-                    id = "item"
-                    />
+                    <span class="home-text09">ТМЦ</span>
                   </div>
                   <div class="home-container25">
-                    <span class="home-text13">Количество</span>
+                    <span class="home-text10">Количество</span>
                   </div>
                 </div>
               </div>
@@ -107,13 +140,8 @@
           <div class="home-footer-container">
             <div class="home-footer">
               <div class="home-copyright-container">
-                <svg viewBox="0 0 1024 1024" class="home-icon">
-                  <path
-                    d="M512 854q140 0 241-101t101-241-101-241-241-101-241 101-101 241 101 241 241 101zM512 86q176 0 301 125t125 301-125 301-301 125-301-125-125-301 125-301 301-125zM506 390q-80 0-80 116v12q0 116 80 116 30 0 50-17t20-43h76q0 50-44 88-42 36-102 36-80 0-122-48t-42-132v-12q0-82 40-128 48-54 124-54 66 0 104 38 42 42 42 98h-76q0-14-6-26-10-20-14-24-20-20-50-20z"
-                  ></path>
-                </svg>
-                <span class="home-link6 Anchor">
-                  Филиал ООО "Газпром Инвест" "Томск"
+                <span class="home-link09 Anchor">
+                  Филиал ООО "Газпром Инвест Томск"
                 </span>
               </div>
             </div>
