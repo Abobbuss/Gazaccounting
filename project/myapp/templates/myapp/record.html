@@ -10,9 +10,9 @@
         <meta charset="utf-8" />
     
         <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/record.css' %}?vers2sion=1">
-        <script type="module" src="{% static 'myapp/js/record.js' %}?version=6"></script>
-        <!-- <script type="module" src="{% static 'myapp/js/general.js' %}?version=3"></script>
-        <script type="module" src="{% static 'myapp/js/ScriptsAPI.js' %}?version=3"></script> -->
+        <script type="module" src="{% static 'myapp/js/record.js' %}?version=10"></script>
+        <!-- <script type="module" src="{% static 'myapp/js/general.js' %}?version=5"></script>
+        <script type="module" src="{% static 'myapp/js/ScriptsAPI.js' %}?version=4"></script> -->
     </head>
 
 
@@ -82,19 +82,6 @@
                       </ul>
                     </div>
                   </div>
-                  <div class="home-container11">
-                    <input
-                    type="text"
-                    placeholder="Город"
-                    class="home-textinput2 input"
-                    id = "city1"
-                    value="Город"
-                    />
-                    <div class="dropdown" id="dropdown2">
-                      <ul>
-                      </ul>
-                    </div>
-                  </div>
                   <div class="home-container12">
                     <input
                     type="text"
@@ -108,14 +95,18 @@
                       </ul>
                     </div>
                   </div>
-                  <div class="home-container13">
+                  <div class="home-container11">
                     <input
                     type="text"
-                    placeholder="QR"
+                    placeholder="Дата"
                     class="home-textinput2 input"
-                    id = "QR"
-                    value="QR"
+                    id = "date"
+                    value="Дата"
                     />
+                    <div class="dropdown" id="dropdown2">
+                      <ul>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -123,14 +114,40 @@
             <div class="home-container20" id="home-container20">
               <div class="home-container21">
                 <div class="home-container22">
-                  <div class="home-container23">
-                    <span class="home-text08">Город</span>
+                  <div class="home-container13">
+                    <input
+                    type="text"
+                    placeholder="Город"
+                    class="home-textinput2 input"
+                    id = "full-name"
+                    value="Города"
+                    />
+                    <div class="dropdown" id="dropdown">
+                      <ul>
+                      </ul>
+                    </div>
                   </div>
-                  <div class="home-container24">
-                    <span class="home-text09">ТМЦ</span>
+                  <div class="home-container14">
+                    <input
+                    type="text"
+                    placeholder="ТМЦ"
+                    class="home-textinput2 input"
+                    id = "item1"
+                    value="ТМЦ"
+                    />
+                    <div class="dropdown" id="dropdown1">
+                      <ul>
+                      </ul>
+                    </div>
                   </div>
-                  <div class="home-container25">
-                    <span class="home-text10">Количество</span>
+                  <div class="home-container10">
+                    <input
+                    type="text"
+                    placeholder="Количество"
+                    class="home-textinput2 input"
+                    id = "item1"
+                    value="Количество"
+                    />
                   </div>
                 </div>
               </div>

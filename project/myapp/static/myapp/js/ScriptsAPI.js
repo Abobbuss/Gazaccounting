@@ -3,7 +3,7 @@ var getCitiesAPI = 'http://127.0.0.1:8000/api/city/';
 var postAddItemAPI = 'http://127.0.0.1:8000/api/item/create/';
 var postAddOwnerShipAPI = 'http://127.0.0.1:8000/api/ownership/create/';
 // var getOwnerShipDetailsAPI = 'http://127.0.0.1:8000/api/ownership/'
-// var getOnwerShipRecordCount = 'http://127.0.0.1:8000/api/ownership/recordCount/';
+var getOnwerShipRecordCountAPI = 'http://127.0.0.1:8000/api/ownership/recordCount/';
 
 
 export function fetchCsrfToken() {
@@ -152,7 +152,6 @@ export function postAddOwnerShip(ownerDepartmentName, itemName, serial_number, q
     return response.json();
   })
   .then(data => {
-    console.log(2);
     console.log(data);
 
     if (downloadQR && data.qr_file_path) {
@@ -197,34 +196,58 @@ export function search(query, searchAPI) {
   });
 };
 
-export function getOwnerShipAPI(fullName, item, city, sn, apiEndpoint) {
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState === 4) {
-        if (xhr.status === 200) {
-          const responseData = JSON.parse(xhr.responseText);
-          resolve(responseData);
-        } else {
-          reject(new Error(`Failed with status ${xhr.status}`));
-        }
-      }
-    };
+// export function getOwnerShipAPI(fullName, item, city, sn, apiEndpoint) {
+//   return new Promise((resolve, reject) => {
+//     const xhr = new XMLHttpRequest();
+//     xhr.onreadystatechange = function () {
+//       if (xhr.readyState === 4) {
+//         if (xhr.status === 200) {
+//           const responseData = JSON.parse(xhr.responseText);
+//           resolve(responseData);
+//         } else {
+//           reject(new Error(`Failed with status ${xhr.status}`));
+//         }
+//       }
+//     };
 
-    const requestData = {
-      full_name: fullName,
-      item: item,
-      city: city,
-      sn: sn,
-    };
+//     const requestData = {
+//       full_name: fullName,
+//       item: item,
+//       city: city,
+//       sn: sn,
+//     };
 
-    const jsonData = JSON.stringify(requestData);
+//     const jsonData = JSON.stringify(requestData);
 
-    xhr.open('POST', apiEndpoint, true);
-    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-    xhr.send(jsonData);
+//     xhr.open('POST', apiEndpoint, true);
+//     xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+//     xhr.send(jsonData);
+//   });
+// };
+
+export async function getOwnerShipRecordCount(city, item) {
+  var csrfTokenMatch = fetchCsrfToken();
+
+  const params = new URLSearchParams();
+  params.append('city', city);
+  params.append('item', item);
+
+  const apiUrlWithParams = `${getOnwerShipRecordCountAPI}?${params.toString()}`;
+
+  return fetch(apiUrlWithParams, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': csrfTokenMatch
+    },
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`Ошибка запроса: ${response.statusText}`);
+    }
+    return response.json();
   });
-}
+};
 
 
 // function showMessage(message) {
@@ -249,29 +272,7 @@ export function getOwnerShipAPI(fullName, item, city, sn, apiEndpoint) {
 //       .catch(error => console.error('Error fetching user info:', error));
 // };
 
-// export async function getOwnerShipRecordCount(city, item) {
-//   var csrfTokenMatch = fetchCsrfToken();
 
-//   const params = new URLSearchParams();
-//   params.append('city', city);
-//   params.append('item', item);
-
-//   const apiUrlWithParams = `${getOnwerShipRecordCount}?${params.toString()}`;
-
-//   return fetch(apiUrlWithParams, {
-//     method: 'GET',
-//     headers: {
-//       'Content-Type': 'application/json',
-//       'X-CSRFToken': csrfTokenMatch
-//     },
-//   })
-//   .then(response => {
-//     if (!response.ok) {
-//       throw new Error(`Ошибка запроса: ${response.statusText}`);
-//     }
-//     return response.json();
-//   });
-// };
 
 
 
@@ -279,5 +280,4 @@ export function getOwnerShipAPI(fullName, item, city, sn, apiEndpoint) {
 // window.postAddOwnerShip = postAddOwnerShip;
 // window.search = search;
 // window.getOwnerShipDetails = getOwnerShipDetails;
-// window.getOwnerShipRecordCount = getOwnerShipRecordCount;
 

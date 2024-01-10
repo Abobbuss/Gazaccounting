@@ -5,36 +5,7 @@ import { updateDropdown } from './general.js';
 var personSearchAPI = 'http://127.0.0.1:8000/api/person/search/';
 var itemSearchAPI = 'http://127.0.0.1:8000/api/item/search/';
 
-
-document.addEventListener('click', function (event) {
-  const dropdown = document.getElementById('dropdown');
-  if (!event.target.closest('.home-container09')) {
-      dropdown.style.display = 'none';
-  }
-});
-
-document.getElementById('full-name').addEventListener('input', function () {
-  const query = this.value;
-
-  ScriptsAPI.search(query, personSearchAPI)
-      .then(results => updateDropdown(results, "dropdown", "full-name"))
-      .catch(error => console.error(error));
-});
-
-document.addEventListener('click', function (event) {
-  const dropdown = document.getElementById('dropdown1');
-  if (!event.target.closest('.home-container10')) {
-      dropdown.style.display = 'none';
-  }
-});
-
-// document.getElementById('item1').addEventListener('input', function () {
-//   const query = this.value;
-
-//   ScriptsAPI.search(query, itemSearchAPI)
-//       .then(results => updateDropdown(results, "dropdown1", "item1"))
-//       .catch(error => console.error(error));
-// });
+// document.addEventListener('DOMContentLoaded', OwnerShipRecordCount);
 
 document.addEventListener('DOMContentLoaded', function() {
   var containerSwitch = document.getElementById('containerSwitch');
@@ -52,31 +23,76 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
+document.addEventListener('click', function (event) {
+  const dropdown = document.getElementById('dropdown');
+  if (!event.target.closest('.home-container09')) {
+      dropdown.style.display = 'none';
+  }
+});
 
+document.getElementById('full-name').addEventListener('input', function () {
+  const query = this.value;
 
-// document.addEventListener('DOMContentLoaded', OwnerShipRecordCount);
-// export function OwnerShipRecordCount() {
-//   const cityInput = document.getElementById('city').value;
-//   const itemInput = document.getElementById('item').value;
-//   console.log(cityInput, itemInput)
+  ScriptsAPI.search(query, personSearchAPI)
+      .then(results => updateDropdown(results, "dropdown", "full-name"))
+      .catch(error => console.error(error));
+});
 
-//   if (!cityInput || !itemInput) {
-//     console.error('Не удалось найти один из элементов');
-//     return;
-//   }
+export function OwnerShipRecordCount() {
+  const cityInput = document.getElementById('full-name').value;
+  const itemInput = document.getElementById('item1').value;
 
-//   const cityValue = cityInput.value || 'None';
-//   const itemValue = itemInput.value || 'None';
+  if (!cityInput || !itemInput) {
+    console.error('Не удалось найти один из элементов');
+    return;
+  }
 
-//   getOwnerShipRecordCount(cityValue, itemValue)
-//     .then(data => {
-//       console.log('Полученные данные:', data);
-//       displayDataInTable(data);
-//     })
-//     .catch(error => {
-//       console.error('Ошибка получения данных:', error);
-//     });
-// }
+  const cityValue = cityInput.value || 'None';
+  const itemValue = itemInput.value || 'None';
+
+  ScriptsAPI.getOwnerShipRecordCount(cityValue, itemValue)
+    .then(data => {
+      console.log('Полученные данные:', data);
+      displayDataInTableCounter(data);
+    })
+    .catch(error => {
+      console.error('Ошибка получения данных:', error);
+    });
+}
+
+export function displayDataInTableCounter(data) {
+  const tableContainer = document.querySelector('.home-container22');
+
+  data.forEach(item => {
+    const cityContainer = document.createElement('div');
+    cityContainer.classList.add('home-container04');
+
+    const cityCell = document.createElement('div');
+    cityCell.classList.add('home-container09');
+    cityCell.innerHTML = `<span>${item.owner__city__name}</span>`;
+    cityContainer.appendChild(cityCell);
+
+    const itemCell = document.createElement('div');
+    itemCell.classList.add('home-container06');
+    itemCell.innerHTML = `<span class="home-text06">${item.item__name} (${item.item__brand})</span>`;
+    cityContainer.appendChild(itemCell);
+
+    const countCell = document.createElement('div');
+    countCell.classList.add('home-container07');
+    countCell.innerHTML = `<span>${item.item_count}</span>`;
+    cityContainer.appendChild(countCell);
+
+    tableContainer.appendChild(cityContainer);
+  });
+}
+
+// document.getElementById('item1').addEventListener('input', function () {
+//   const query = this.value;
+
+//   ScriptsAPI.search(query, itemSearchAPI)
+//       .then(results => updateDropdown(results, "dropdown1", "item1"))
+//       .catch(error => console.error(error));
+// });
 
 // export function displayDataInTable(data) {
 //   const tableContainer = document.querySelector('.home-table1');
