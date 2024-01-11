@@ -30,8 +30,6 @@ if DEBUG:
     import mimetypes
     mimetypes.add_type("application/javascript", ".js", True)
 
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -77,11 +75,12 @@ TEMPLATES = [
     },
 ]
 
-# ALLOWED_HOSTS = ['192.168.1.1', '192.168.11.155', '127.0.0.1']
-ALLOWED_HOSTS = []
-CORS_ALLOW_ALL_ORIGINS = False
+ALLOWED_HOSTS = ['192.168.1.1', '192.168.11.155', '127.0.0.1']
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 WSGI_APPLICATION = 'project.wsgi.application'
+SECURE_CROSS_ORIGIN_OPENER_POLICY=None
+SESSION_COOKIE_SECURE=False
 
 
 # Database
