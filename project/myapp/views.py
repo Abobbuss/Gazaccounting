@@ -237,14 +237,16 @@ class OwnerShipRecordView(generics.RetrieveAPIView):
     serializer_class = serializers.OwnershipSerializer
 
     def get(self, request):
-        person_id = request.query_params.get('person_id', None)
-        item_id = request.query_params.get('item_id', None)
-        added_date = request.query_params.get('added_date', None)
-        city_name = request.query_params.get('city_name', None)
+        person_id = request.query_params.get('person', None)
+        item_id = request.query_params.get('item', None)
+        added_date = request.query_params.get('date', None)
+        serial_number = request.query_params.get('sn', None)
 
-        queryset = utils.filter_ownership_data(person_id, item_id, added_date, city_name)
+        queryset = models.Ownership.objects.all()
+        # queryset = utils.filter_ownership_data(person_id, item_id, added_date, serial_number)
 
         serializer = serializers.OwnershipSerializer(queryset, many=True)
+
         return Response(serializer.data)
     
 class OwnerShipRecordCountView(generics.RetrieveAPIView):

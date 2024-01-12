@@ -37,7 +37,7 @@ class Ownership(models.Model):
     department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True, blank=True)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     serial_number = models.CharField(max_length=255, blank=True, null=True)
-    added_date = models.DateTimeField(auto_now_add=True)
+    added_date = models.DateField(auto_now_add=True)
     qr_code = models.ImageField(upload_to='qr_codes/', blank=True, null=True)
 
     def clean(self):

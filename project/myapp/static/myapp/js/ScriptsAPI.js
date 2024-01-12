@@ -2,7 +2,7 @@ var postAddPersonAPI = 'http://127.0.0.1:8000/api/person/create/';
 var getCitiesAPI = 'http://127.0.0.1:8000/api/city/';
 var postAddItemAPI = 'http://127.0.0.1:8000/api/item/create/';
 var postAddOwnerShipAPI = 'http://127.0.0.1:8000/api/ownership/create/';
-// var getOwnerShipDetailsAPI = 'http://127.0.0.1:8000/api/ownership/'
+var getOwnerShipDetailsAPI = 'http://127.0.0.1:8000/api/ownership/record/'
 var getOnwerShipRecordCountAPI = 'http://127.0.0.1:8000/api/ownership/recordCount/';
 
 
@@ -156,8 +156,6 @@ export function postAddOwnerShip(ownerDepartmentName, itemName, serial_number, q
 
     if (downloadQR && data.qr_file_path) {
       const downloadUrl = `/download-qr?path=${encodeURIComponent(data.qr_file_path)}`;
-
-      // Создаем ссылку и эмулируем клик для скачивания файла
       const link = document.createElement('a');
       link.href = downloadUrl;
       link.setAttribute('download', 'qr_code.png');
@@ -196,35 +194,6 @@ export function search(query, searchAPI) {
   });
 };
 
-// export function getOwnerShipAPI(fullName, item, city, sn, apiEndpoint) {
-//   return new Promise((resolve, reject) => {
-//     const xhr = new XMLHttpRequest();
-//     xhr.onreadystatechange = function () {
-//       if (xhr.readyState === 4) {
-//         if (xhr.status === 200) {
-//           const responseData = JSON.parse(xhr.responseText);
-//           resolve(responseData);
-//         } else {
-//           reject(new Error(`Failed with status ${xhr.status}`));
-//         }
-//       }
-//     };
-
-//     const requestData = {
-//       full_name: fullName,
-//       item: item,
-//       city: city,
-//       sn: sn,
-//     };
-
-//     const jsonData = JSON.stringify(requestData);
-
-//     xhr.open('POST', apiEndpoint, true);
-//     xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-//     xhr.send(jsonData);
-//   });
-// };
-
 export async function getOwnerShipRecordCount(city, item) {
   var csrfTokenMatch = fetchCsrfToken();
 
@@ -249,6 +218,30 @@ export async function getOwnerShipRecordCount(city, item) {
   });
 };
 
+export async function getOwnerShipRecordPeople(city, item, sn, date) {
+  var csrfTokenMatch = fetchCsrfToken();
+  const params = new URLSearchParams();
+  params.append('city', city);
+  params.append('item', item);
+  params.append('sn', sn);
+  params.append('date', date);
+
+  const apiUrlWithParams = `${getOwnerShipDetailsAPI}?${params.toString()}`;
+
+  return fetch(apiUrlWithParams, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': csrfTokenMatch
+    },
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`Ошибка запроса: ${response.statusText}`);
+    }
+    return response.json();
+  });
+};
 
 // function showMessage(message) {
 //   var resultsList = document.getElementById('errorMesageItem');

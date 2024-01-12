@@ -102,7 +102,7 @@ def generate_qr_code(ownership_id):
 
     return img_bytes
 
-def filter_ownership_data(person_id, item_id, added_date, city_name):
+def filter_ownership_data(person_id, item_id, added_date, serial_number):
     filters = Q()
 
     if person_id:
@@ -113,9 +113,6 @@ def filter_ownership_data(person_id, item_id, added_date, city_name):
 
     if added_date:
         filters &= Q(added_date=added_date)
-
-    if city_name:
-        filters &= Q(owner__city__name=city_name)
 
     queryset = models.Ownership.objects.filter(filters).order_by('owner__last_name', 'item__name', 'added_date')
 
